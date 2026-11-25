@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cambridge IGCSE Physics (0625) — Candidate Diagnostic Test</title>
+  <style>
+    :root { --bg:#f1f5f9; --ink:#0f172a; --muted:#475569; --accent:#1d4ed8; --border:#cbd5e1; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+    .topbar { background:linear-gradient(135deg,#0f172a,#1e3a8a); color:#fff; padding:14px 20px; }
+    .topbar-inner { max-width:980px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
+    .container { max-width:980px; margin:16px auto 70px; padding:0 16px; }
+    .cand-box { background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:14px; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; }
+    .cand-box label { display:block; font-size:0.78rem; font-weight:700; color:var(--muted); margin-bottom:4px; }
+    .cand-box input { width:100%; padding:8px 10px; border:1px solid #94a3b8; border-radius:6px; }
+    .sheet { background:#fff; border:1px solid var(--border); border-radius:12px; padding:24px; }
+    .section-banner { margin:22px 0 12px; padding:9px 14px; background:#0f172a; color:#fff; border-radius:8px; font-weight:700; display:flex; justify-content:space-between; }
+    .q-card { border:1px solid #e2e8f0; border-radius:10px; padding:15px 17px; margin-bottom:14px; }
+    .mcq-opts { list-style:none; padding:0; margin:10px 0 0; display:grid; gap:8px; }
+    .mcq-opts li { display:flex; gap:8px; border:1px solid #cbd5e1; border-radius:8px; padding:8px 11px; cursor:pointer; background:#f8fafc; }
+    .mcq-opts li.picked { border-color:var(--accent); background:#eff6ff; }
+    .svg-wrap { margin:10px 0; text-align:center; overflow-x:auto; }
+    .subpart { margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; }
+    .online-ta { width:100%; min-height:60px; margin-top:6px; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; }
+    .print-ans { display:none; white-space:pre-wrap; border:1px solid #cbd5e1; padding:6px 8px; margin-top:6px; }
+    .exam-tbl { width:100%; border-collapse:collapse; margin-top:8px; font-size:0.86rem; }
+    .exam-tbl th, .exam-tbl td { border:1px solid #94a3b8; padding:5px 9px; text-align:left; }
+    .appendix-page { margin-top:20px; border-top:2px solid #cbd5e1; padding-top:14px; }
+    .bar { position:sticky; bottom:10px; margin-top:18px; background:#0f172a; color:#fff; border-radius:12px; padding:13px 18px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
+    .btn { border:none; border-radius:8px; padding:9px 14px; font-size:0.86rem; font-weight:600; cursor:pointer; color:#fff; background:#2563eb; }
+    .btn-green { background:#059669; } .btn-slate { background:#475569; }
+    .submit-panel { display:none; margin-top:18px; background:#ecfdf5; border:2px solid #059669; border-radius:12px; padding:16px 18px; }
+    .submit-panel.show { display:block; }
+    .code-area { width:100%; height:72px; font-family:monospace; font-size:0.78rem; padding:8px; border:1px solid #94a3b8; border-radius:6px; margin-top:8px; }
+    @media print {
+      .no-print,.topbar,.bar,.submit-panel { display:none !important; }
+      .online-ta { display:none !important; }
+      .print-ans { display:block !important; }
+      .q-card { break-inside:avoid; }
+      body { background:#fff; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar no-print">
+    <div class="topbar-inner">
+      <div>
+        <strong style="font-size:1.1rem;">Cambridge IGCSE Physics (0625) — Online Diagnostic Paper</strong>
+        <div style="font-size:0.82rem;color:#cbd5e1;" id="topMilestone">Candidate Mode • Auto-saved locally</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-slate" onclick="window.print()">🖨️ In / Lưu PDF</button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="cand-box">
+      <div><label>Candidate Name *</label><input id="stName" type="text" placeholder="Họ và tên học sinh..." oninput="saveDraft()" /></div>
+      <div><label>School / Grade</label><input id="stSchool" type="text" placeholder="Trường đang học..." oninput="saveDraft()" /></div>
+      <div><label>Remaining Time</label><input id="timerBox" type="text" readonly value="50:00" style="font-weight:700;background:#f8fafc;" /></div>
+    </div>
+    <div class="sheet" id="paperSheet"></div>
+
+    <div class="submit-panel no-print" id="submitPanel">
+      <h3 style="margin:0 0 6px;color:#065f46;">✅ Đã hoàn tất &amp; khóa bài làm!</h3>
+      <p style="margin:0 0 10px;font-size:0.9rem;">Gửi file hoặc Mã bài nộp bên dưới cho giáo viên chấm:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="btn btn-green" onclick="downloadSub()">💾 Tải file bài làm (.json)</button>
+        <button class="btn" onclick="copySubCode()">📋 Copy Mã bài nộp</button>
+        <button class="btn btn-slate" onclick="window.print()">🖨️ In / PDF bài làm</button>
+      </div>
+      <textarea id="subCodeOut" class="code-area" readonly></textarea>
+    </div>
+
+    <div class="bar no-print">
+      <div id="progText" style="font-weight:700;">Answered: 0 MCQs</div>
+      <button class="btn btn-green" id="btnSubmit" onclick="submitTest()">🚀 Nộp bài &amp; Tạo Mã gửi Giáo viên</button>
+    </div>
+  </div>
+
+<script>
+const SVGS = {
+  speedTimeGraph: `<svg viewBox="0 0 420 215" width="380" xmlns="http://www.w3.org/2000/svg">
+    <line x1="55" y1="20" x2="55" y2="175" stroke="#0f172a" stroke-width="2"/>
+    <line x1="55" y1="175" x2="390" y2="175" stroke="#0f172a" stroke-width="2"/>
+    <text x="16" y="98" font-size="11" font-weight="bold" transform="rotate(-90 16,98)" text-anchor="middle">Speed / m s⁻¹</text>
+    <text x="222" y="200" font-size="11" font-weight="bold" text-anchor="middle">Time / s</text>
+    <line x1="50" y1="55" x2="355" y2="55" stroke="#cbd5e1" stroke-dasharray="4,3"/>
+    <line x1="50" y1="85" x2="55" y2="85" stroke="#0f172a" stroke-width="1.2"/>
+    <line x1="50" y1="115" x2="55" y2="115" stroke="#0f172a" stroke-width="1.2"/>
+    <line x1="50" y1="145" x2="115" y2="145" stroke="#cbd5e1" stroke-dasharray="4,3"/>
+    <line x1="175" y1="55" x2="175" y2="175" stroke="#94a3b8" stroke-dasharray="4,3"/>
+    <line x1="335" y1="55" x2="335" y2="175" stroke="#94a3b8" stroke-dasharray="4,3"/>
+    <text x="46" y="59" font-size="10" text-anchor="end">16</text>
+    <text x="46" y="89" font-size="9.5" fill="#64748b" text-anchor="end">12</text>
+    <text x="46" y="119" font-size="9.5" fill="#64748b" text-anchor="end">8.0</text>
+    <text x="46" y="149" font-size="10" text-anchor="end">4.0</text>
+    <text x="46" y="178" font-size="10" text-anchor="end">0</text>
+    <text x="55" y="188" font-size="10" text-anchor="middle">0</text>
+    <text x="175" y="188" font-size="10" text-anchor="middle">6.0</text>
+    <text x="335" y="188" font-size="10" text-anchor="middle">16.0</text>
+    <polyline points="55,145 175,55 335,55" fill="none" stroke="#1d4ed8" stroke-width="2.8"/>
+    <text x="126" y="80" font-size="10.5" font-weight="bold" fill="#1d4ed8">Stage P</text>
+    <text x="255" y="47" font-size="10.5" font-weight="bold" fill="#1d4ed8">Stage Q</text>
+  </svg>`,
+
+  momentsBeam: `<svg viewBox="0 0 420 165" width="380" xmlns="http://www.w3.org/2000/svg">
+    <rect x="45" y="58" width="330" height="12" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.8"/>
+    <polygon points="210,70 198,94 222,94" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+    <line x1="185" y1="94" x2="235" y2="94" stroke="#0f172a" stroke-width="2"/>
+    <text x="210" y="110" font-size="10" font-weight="bold" text-anchor="middle">Pivot (50 cm)</text>
+    <line x1="110" y1="70" x2="110" y2="115" stroke="#dc2626" stroke-width="2.2"/>
+    <polygon points="110,122 106,113 114,113" fill="#dc2626"/>
+    <text x="110" y="136" font-size="10.5" font-weight="bold" fill="#dc2626" text-anchor="middle">3.0 N (at 20 cm)</text>
+    <line x1="276" y1="70" x2="276" y2="115" stroke="#2563eb" stroke-width="2.2"/>
+    <polygon points="276,122 272,113 280,113" fill="#2563eb"/>
+    <text x="276" y="136" font-size="10.5" font-weight="bold" fill="#2563eb" text-anchor="middle">4.5 N (distance d)</text>
+    <line x1="110" y1="42" x2="210" y2="42" stroke="#475569" stroke-width="1.2"/>
+    <text x="160" y="36" font-size="10" text-anchor="middle">30 cm</text>
+    <line x1="210" y1="42" x2="276" y2="42" stroke="#475569" stroke-width="1.2"/>
+    <text x="243" y="36" font-size="10" text-anchor="middle">d = ?</text>
+  </svg>`,
+
+  sankeyDiagram: `<svg viewBox="0 0 400 175" width="360" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40,35 L175,35 L175,25 L325,25 L345,42 L325,59 L175,59 L175,49 L40,49 Z" fill="#bbf7d0" stroke="#166534" stroke-width="1.6"/>
+    <path d="M40,49 L175,49 Q215,49 235,98 L248,98 L220,132 L192,98 L205,98 Q188,75 160,75 L40,75 Z" fill="#fecaca" stroke="#991b1b" stroke-width="1.6"/>
+    <rect x="40" y="35" width="120" height="40" fill="#dbeafe" stroke="#1e40af" stroke-width="1.6"/>
+    <text x="100" y="59" font-size="10.5" font-weight="bold" text-anchor="middle" fill="#1e3a8a">Input: 1400 J</text>
+    <text x="260" y="45" font-size="10" font-weight="bold" text-anchor="middle" fill="#14532d">Useful GPE: 980 J</text>
+    <text x="220" y="148" font-size="10" font-weight="bold" text-anchor="middle" fill="#991b1b">Wasted thermal energy: ?</text>
+  </svg>`,
+
+  gasCylinder: `<svg viewBox="0 0 380 155" width="350" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="25" width="140" height="100" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
+    <rect x="135" y="25" width="12" height="100" fill="#64748b" stroke="#0f172a"/>
+    <rect x="147" y="68" width="28" height="14" fill="#94a3b8" stroke="#0f172a"/>
+    <text x="84" y="70" font-size="10.5" font-weight="bold" text-anchor="middle">p₁ = 100 kPa</text>
+    <text x="84" y="86" font-size="10.5" font-weight="bold" text-anchor="middle">V₁ = 450 cm³</text>
+    <text x="100" y="143" font-size="10" text-anchor="middle">Before compression</text>
+
+    <line x1="184" y1="75" x2="208" y2="75" stroke="#0f172a" stroke-width="2"/>
+    <polygon points="214,75 206,70 206,80" fill="#0f172a"/>
+
+    <rect x="222" y="25" width="120" height="100" fill="#bae6fd" stroke="#0f172a" stroke-width="2"/>
+    <rect x="275" y="25" width="12" height="100" fill="#64748b" stroke="#0f172a"/>
+    <rect x="287" y="68" width="55" height="14" fill="#94a3b8" stroke="#0f172a"/>
+    <text x="250" y="70" font-size="10" font-weight="bold" text-anchor="middle">p₂ = ?</text>
+    <text x="250" y="86" font-size="10" font-weight="bold" text-anchor="middle">V₂ = 150 cm³</text>
+    <text x="282" y="143" font-size="10" text-anchor="middle">Constant temperature</text>
+  </svg>`,
+
+  waveGraph: `<svg viewBox="0 0 420 185" width="380" xmlns="http://www.w3.org/2000/svg">
+    <line x1="50" y1="20" x2="50" y2="160" stroke="#0f172a" stroke-width="2"/>
+    <line x1="50" y1="96" x2="390" y2="96" stroke="#0f172a" stroke-width="1.8"/>
+    <text x="16" y="90" font-size="10" font-weight="bold" transform="rotate(-90 16,90)" text-anchor="middle">Displacement / cm</text>
+    <text x="372" y="112" font-size="10" font-weight="bold">Distance / m</text>
+    <line x1="50" y1="48" x2="375" y2="48" stroke="#94a3b8" stroke-dasharray="4,3"/>
+    <line x1="50" y1="144" x2="375" y2="144" stroke="#cbd5e1" stroke-dasharray="4,3"/>
+    <line x1="210" y1="92" x2="210" y2="100" stroke="#0f172a" stroke-width="1.5"/>
+    <line x1="370" y1="92" x2="370" y2="100" stroke="#0f172a" stroke-width="1.5"/>
+    <polyline points="50,96.0 58,81.2 66,67.8 74,57.2 82,50.3 90,48.0 98,50.3 106,57.2 114,67.8 122,81.2 130,96.0 138,110.8 146,124.2 154,134.8 162,141.7 170,144.0 178,141.7 186,134.8 194,124.2 202,110.8 210,96.0 218,81.2 226,67.8 234,57.2 242,50.3 250,48.0 258,50.3 266,57.2 274,67.8 282,81.2 290,96.0 298,110.8 306,124.2 314,134.8 322,141.7 330,144.0 338,141.7 346,134.8 354,124.2 362,110.8 370,96.0" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+    <text x="44" y="52" font-size="10" text-anchor="end">+4.0</text>
+    <text x="44" y="100" font-size="10" text-anchor="end">0</text>
+    <text x="44" y="148" font-size="10" text-anchor="end">−4.0</text>
+    <text x="210" y="114" font-size="10" text-anchor="middle">0.15</text>
+    <text x="370" y="114" font-size="10" text-anchor="middle">0.30</text>
+  </svg>`,
+
+  refractionBlock: `<svg viewBox="0 0 380 185" width="340" xmlns="http://www.w3.org/2000/svg">
+    <rect x="80" y="75" width="220" height="80" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
+    <line x1="175" y1="15" x2="175" y2="170" stroke="#64748b" stroke-dasharray="4,3" stroke-width="1.5"/>
+    <line x1="100" y1="20" x2="175" y2="75" stroke="#dc2626" stroke-width="2.2"/>
+    <line x1="175" y1="75" x2="210" y2="155" stroke="#dc2626" stroke-width="2.2"/>
+    <text x="158" y="45" font-size="10.5" font-weight="bold" fill="#dc2626">i = 42°</text>
+    <text x="184" y="125" font-size="10.5" font-weight="bold" fill="#1d4ed8">r = ?</text>
+    <text x="255" y="115" font-size="10.5" font-weight="bold">Glass (n = 1.50)</text>
+    <text x="105" y="165" font-size="9.5" fill="#64748b">Normal line</text>
+  </svg>`,
+
+  ivGraph: `<svg viewBox="0 0 360 185" width="330" xmlns="http://www.w3.org/2000/svg">
+    <line x1="60" y1="20" x2="60" y2="155" stroke="#0f172a" stroke-width="2"/>
+    <line x1="60" y1="155" x2="325" y2="155" stroke="#0f172a" stroke-width="2"/>
+    <text x="20" y="88" font-size="10.5" font-weight="bold" transform="rotate(-90 20,88)" text-anchor="middle">Current I / A</text>
+    <text x="195" y="176" font-size="10.5" font-weight="bold" text-anchor="middle">Potential difference V / V</text>
+    <path d="M60,155 Q125,65 305,40" fill="none" stroke="#dc2626" stroke-width="2.6"/>
+    <line x1="60" y1="155" x2="290" y2="30" stroke="#94a3b8" stroke-dasharray="5,3" stroke-width="1.5"/>
+    <text x="235" y="34" font-size="9.5" fill="#64748b">Ohmic resistor</text>
+    <text x="235" y="62" font-size="10" font-weight="bold" fill="#dc2626">Filament lamp</text>
+  </svg>`,
+
+  circuitDiagram: `<svg viewBox="0 0 380 175" width="340" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="80,72 80,35 300,35 300,72" fill="none" stroke="#0f172a" stroke-width="1.8"/>
+    <polyline points="80,98 80,140 300,140 300,98" fill="none" stroke="#0f172a" stroke-width="1.8"/>
+    <line x1="65" y1="72" x2="95" y2="72" stroke="#0f172a" stroke-width="2.2"/>
+    <line x1="72" y1="80" x2="88" y2="80" stroke="#0f172a" stroke-width="3.2"/>
+    <line x1="65" y1="88" x2="95" y2="88" stroke="#0f172a" stroke-width="2.2"/>
+    <line x1="72" y1="96" x2="88" y2="96" stroke="#0f172a" stroke-width="3.2"/>
+    <text x="36" y="88" font-size="10.5" font-weight="bold">12.0 V</text>
+    <rect x="145" y="25" width="60" height="20" fill="#fff" stroke="#0f172a" stroke-width="1.8"/>
+    <text x="175" y="39" font-size="10" font-weight="bold" text-anchor="middle">6.0 Ω</text>
+    <polyline points="120,35 120,90 145,90" fill="none" stroke="#0f172a" stroke-width="1.8"/>
+    <polyline points="205,90 230,90 230,35" fill="none" stroke="#0f172a" stroke-width="1.8"/>
+    <rect x="145" y="80" width="60" height="20" fill="#fff" stroke="#0f172a" stroke-width="1.8"/>
+    <text x="175" y="94" font-size="10" font-weight="bold" text-anchor="middle">12 Ω</text>
+    <circle cx="300" cy="85" r="13" fill="#fff" stroke="#0f172a" stroke-width="1.8"/>
+    <text x="300" y="89" font-size="11" font-weight="bold" text-anchor="middle">A</text>
+  </svg>`,
+
+  transformerSvg: `<svg viewBox="0 0 380 165" width="340" xmlns="http://www.w3.org/2000/svg">
+    <rect x="115" y="25" width="150" height="115" fill="#e2e8f0" stroke="#0f172a" stroke-width="2"/>
+    <rect x="145" y="50" width="90" height="65" fill="#fff" stroke="#0f172a" stroke-width="1.8"/>
+    <path d="M90,45 L115,45 M90,120 L115,120" stroke="#1d4ed8" stroke-width="2"/>
+    <path d="M115,55 Q128,60 115,65 Q128,70 115,75 Q128,80 115,85 Q128,90 115,95 Q128,100 115,105" fill="none" stroke="#1d4ed8" stroke-width="2.2"/>
+    <path d="M265,65 Q252,70 265,75 Q252,80 265,85 Q252,90 265,95" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+    <path d="M265,65 L290,65 M265,95 L290,95" stroke="#dc2626" stroke-width="2"/>
+    <text x="54" y="80" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">230 V a.c.</text>
+    <text x="54" y="95" font-size="10" fill="#1d4ed8" text-anchor="middle">Nₚ = 2400</text>
+    <text x="328" y="78" font-size="10" font-weight="bold" fill="#dc2626" text-anchor="middle">Vₛ = ?</text>
+    <text x="328" y="93" font-size="10" fill="#dc2626" text-anchor="middle">Nₛ = 120</text>
+    <text x="190" y="155" font-size="10" font-weight="bold" text-anchor="middle">Soft iron core</text>
+  </svg>`,
+
+  halfLifeCurve: `<svg viewBox="0 0 390 195" width="350" xmlns="http://www.w3.org/2000/svg">
+    <line x1="55" y1="20" x2="55" y2="155" stroke="#0f172a" stroke-width="2"/>
+    <line x1="55" y1="155" x2="355" y2="155" stroke="#0f172a" stroke-width="2"/>
+    <line x1="55" y1="25" x2="345" y2="25" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="55" y1="51" x2="345" y2="51" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="55" y1="77" x2="345" y2="77" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="55" y1="103" x2="345" y2="103" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="55" y1="129" x2="345" y2="129" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="145" y1="25" x2="145" y2="155" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="235" y1="25" x2="235" y2="155" stroke="#e2e8f0" stroke-width="1"/>
+    <line x1="325" y1="25" x2="325" y2="155" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="15" y="88" font-size="10" font-weight="bold" transform="rotate(-90 15,88)" text-anchor="middle">Count rate / counts min⁻¹</text>
+    <text x="205" y="182" font-size="10" font-weight="bold" text-anchor="middle">Time / hours</text>
+    <line x1="55" y1="144.6" x2="345" y2="144.6" stroke="#dc2626" stroke-dasharray="4,3" stroke-width="1.4"/>
+    <text x="275" y="141" font-size="9" font-weight="bold" fill="#dc2626">Background = 40</text>
+    <polyline points="55.0,35.4 62.5,41.5 70.0,47.3 77.5,52.8 85.0,57.9 92.5,62.8 100.0,67.4 107.5,71.7 115.0,75.8 122.5,79.7 130.0,83.3 137.5,86.8 145.0,90.0 152.5,93.1 160.0,96.0 167.5,98.7 175.0,101.3 182.5,103.7 190.0,106.0 197.5,108.2 205.0,110.2 212.5,112.1 220.0,114.0 227.5,115.7 235.0,117.3" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+    <circle cx="55" cy="35.4" r="3" fill="#2563eb"/>
+    <circle cx="145" cy="90.0" r="3" fill="#2563eb"/>
+    <circle cx="235" cy="117.3" r="3" fill="#2563eb"/>
+    <text x="48" y="29" font-size="9" text-anchor="end">500</text>
+    <text x="48" y="55" font-size="9" text-anchor="end">400</text>
+    <text x="48" y="81" font-size="9" text-anchor="end">300</text>
+    <text x="48" y="107" font-size="9" text-anchor="end">200</text>
+    <text x="48" y="133" font-size="9" text-anchor="end">100</text>
+    <text x="48" y="158" font-size="9" text-anchor="end">0</text>
+    <text x="55" y="168" font-size="9.5" text-anchor="middle">0</text>
+    <text x="145" y="168" font-size="9.5" text-anchor="middle">6.0</text>
+    <text x="235" y="168" font-size="9.5" text-anchor="middle">12.0</text>
+    <text x="325" y="168" font-size="9.5" text-anchor="middle">18.0</text>
+  </svg>`,
+
+  orbitSvg: `<svg viewBox="0 0 360 165" width="330" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="150" cy="82" r="22" fill="#38bdf8" stroke="#0f172a" stroke-width="1.8"/>
+    <text x="150" y="86" font-size="10" font-weight="bold" text-anchor="middle">Earth</text>
+    <circle cx="150" cy="82" r="64" fill="none" stroke="#475569" stroke-dasharray="5,4" stroke-width="1.6"/>
+    <circle cx="214" cy="82" r="5" fill="#dc2626"/>
+    <text x="265" y="75" font-size="10" font-weight="bold">Satellite</text>
+    <text x="265" y="90" font-size="9.5">r = 4.2 × 10⁷ m</text>
+    <text x="265" y="104" font-size="9.5">T = 24 hours</text>
+    <line x1="150" y1="82" x2="214" y2="82" stroke="#0f172a" stroke-width="1.2"/>
+    <text x="182" y="75" font-size="9.5" text-anchor="middle">r</text>
+  </svg>`,
+
+  atpParallax: `<svg viewBox="0 0 410 175" width="365" xmlns="http://www.w3.org/2000/svg">
+    <rect x="65" y="25" width="55" height="125" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
+    <path d="M65,69 Q92,85 120,69" fill="none" stroke="#1d4ed8" stroke-width="2.4"/>
+    <line x1="65" y1="45" x2="85" y2="45" stroke="#0f172a" stroke-width="1.4"/><text x="46" y="49" font-size="9.5">50</text>
+    <line x1="65" y1="53" x2="75" y2="53" stroke="#64748b"/><line x1="65" y1="61" x2="75" y2="61" stroke="#64748b"/>
+    <line x1="65" y1="69" x2="75" y2="69" stroke="#64748b"/><line x1="65" y1="77" x2="77" y2="77" stroke="#0f172a" stroke-width="1.2"/>
+    <line x1="65" y1="85" x2="85" y2="85" stroke="#0f172a" stroke-width="1.4"/><text x="46" y="89" font-size="9.5">40</text>
+    <line x1="65" y1="93" x2="75" y2="93" stroke="#64748b"/><line x1="65" y1="101" x2="75" y2="101" stroke="#64748b"/>
+    <line x1="65" y1="109" x2="75" y2="109" stroke="#64748b"/><line x1="65" y1="117" x2="75" y2="117" stroke="#64748b"/>
+    <line x1="65" y1="125" x2="85" y2="125" stroke="#0f172a" stroke-width="1.4"/><text x="46" y="129" font-size="9.5">30</text>
+    <text x="42" y="156" font-size="9" fill="#475569">cm³</text>
+    <line x1="92" y1="77" x2="215" y2="77" stroke="#16a34a" stroke-dasharray="4,3" stroke-width="1.6"/>
+    <circle cx="225" cy="77" r="7" fill="none" stroke="#16a34a" stroke-width="2"/>
+    <circle cx="225" cy="77" r="2.5" fill="#16a34a"/>
+    <text x="238" y="75" font-size="9.5" font-weight="bold" fill="#166534">Correct eye level</text>
+    <text x="238" y="87" font-size="9" fill="#166534">(perpendicular to scale)</text>
+    <line x1="92" y1="77" x2="215" y2="38" stroke="#dc2626" stroke-dasharray="3,3" stroke-width="1.4"/>
+    <text x="224" y="40" font-size="9.5" font-weight="bold" fill="#dc2626">Parallax error (inaccurate reading)</text>
+  </svg>`
+};
+const MODULES = [
+  {
+    id: 1,
+    title: "Module 1: Measurements, Motion & Density",
+    cup: "CUP 3rd Ed. Ch. 1–2",
+    mcqCore: {
+      stem: "A rectangular metal block has mass 540 g and volume 200 cm³. What is its density?",
+      options: ["0.37 g/cm³", "2.7 g/cm³", "340 g/cm³", "108 000 g/cm³"],
+    },
+    mcqExt: {
+      stem: "A car travels 60 km at 30 km/h, then travels another 60 km at 60 km/h. What is its average speed for the entire 120 km journey?",
+      options: ["40 km/h", "45 km/h", "48 km/h", "50 km/h"],
+    },
+    theoryCore: {
+      stem: "A train moves along a straight track as shown in the speed–time graph below (Stage P: 0–6.0 s; Stage Q: 6.0–16.0 s).",
+      svg: "speedTimeGraph",
+      parts: [
+        { lbl: "(a)", text: "Calculate the total distance travelled by the train during Stage P and Stage Q (area under graph).", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Describe the motion of the train during Stage Q (6.0 s to 16.0 s).", marks: 1, lines: 1 }
+      ],
+    },
+    theoryExt: {
+      stem: "Using the same speed–time graph above (Stage P: 0 to 6.0 s; Stage Q: 6.0 to 16.0 s):",
+      parts: [
+        { lbl: "(a)", text: "Calculate the acceleration of the train during Stage P (0 to 6.0 s).", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Explain how the graph shows the acceleration during Stage P is constant.", marks: 1, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "A student times 20 complete oscillations of a pendulum as 28.4 s. Calculate the period T [1] and state why timing 20 oscillations is more accurate than timing 1 oscillation [1].",
+      marks: 2,
+      lines: 3,
+    }
+  },
+  {
+    id: 2,
+    title: "Module 2: Forces, Moments & Momentum",
+    cup: "CUP 3rd Ed. Ch. 3–5",
+    mcqCore: {
+      stem: "On Earth (g = 9.8 N/kg), an astronaut has a mass of 70 kg. What is the astronaut's weight on Earth?",
+      options: ["7.1 N", "70 N", "686 N", "700 N"],
+    },
+    mcqExt: {
+      stem: "Two horizontal forces of 8.0 N (North) and 6.0 N (East) act at right angles on a box. What is the magnitude of the resultant force?",
+      options: ["2.0 N", "7.0 N", "10 N", "14 N"],
+    },
+    theoryCore: {
+      stem: "A uniform metre rule is pivoted at its 50 cm mark as shown.",
+      svg: "momentsBeam",
+      parts: [
+        { lbl: "(a)", text: "Calculate the anticlockwise moment of the 3.0 N weight about the pivot (in N cm).", marks: 1, lines: 1 },
+        { lbl: "(b)", text: "Calculate the distance d from the pivot where the 4.5 N weight must hang so the rule is balanced.", marks: 2, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "Answer the following on springs and momentum:",
+      parts: [
+        { lbl: "(a)", text: "A spring of unstretched length 12.0 cm extends to 17.0 cm when loaded with 4.0 N. Calculate the spring constant k in N/cm.", marks: 1, lines: 2 },
+        { lbl: "(b)", text: "Trolley A (mass 2.0 kg, moving at 3.0 m/s) collides and sticks to stationary trolley B (mass 1.0 kg). Calculate their common velocity after collision.", marks: 2, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "When investigating Hooke's law for a spring, state how to ensure the pointer reading on the metre rule has no parallax error [1] and state how the graph shows the limit of proportionality has been exceeded [1].",
+      marks: 2,
+      lines: 3,
+    }
+  },
+  {
+    id: 3,
+    title: "Module 3: Energy, Work, Power & Pressure",
+    cup: "CUP 3rd Ed. Ch. 5.4, 6–8",
+    mcqCore: {
+      stem: "A steel block exerts a force of 180 N over a base area of 0.030 m². What is the pressure on the table?",
+      options: ["5.4 Pa", "600 Pa", "5400 Pa", "6000 Pa"],
+    },
+    mcqExt: {
+      stem: "A car of mass 1200 kg travels at a speed of 20 m/s. What is its kinetic energy?",
+      options: ["12 000 J", "24 000 J", "240 000 J", "480 000 J"],
+    },
+    theoryCore: {
+      stem: "The Sankey diagram represents an electric winch lifting a 25 kg load vertically by 4.0 m (g = 9.8 N/kg).",
+      svg: "sankeyDiagram",
+      parts: [
+        { lbl: "(a)", text: "Calculate the wasted thermal energy.", marks: 1, lines: 1 },
+        { lbl: "(b)", text: "Calculate the percentage efficiency of the winch.", marks: 2, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "Water in a diving pool has density 1000 kg/m³ (g = 9.8 N/kg).",
+      parts: [
+        { lbl: "(a)", text: "Calculate the increase in liquid pressure at a depth of 15 m below the surface.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Explain why the total pressure at 15 m depth is greater than your answer to (a).", marks: 1, lines: 1 }
+      ],
+    },
+    atp: {
+      stem: "A student measures their own power output running up stairs of total height h in time t. State the THREE quantities the student must measure (besides g = 9.8 N/kg) and write the equation for power P.",
+      marks: 2,
+      lines: 3,
+    }
+  },
+  {
+    id: 4,
+    title: "Module 4: Thermal Physics & Energy Transfer",
+    cup: "CUP 3rd Ed. Ch. 9–11",
+    mcqCore: {
+      stem: "What is a temperature of 27 °C expressed on the Kelvin scale?",
+      options: ["−246 K", "27 K", "273 K", "300 K"],
+    },
+    mcqExt: {
+      stem: "A 2.0 kg block of aluminium (c = 900 J/(kg °C)) absorbs 36 000 J of thermal energy. What is its temperature rise?",
+      options: ["10 °C", "20 °C", "40 °C", "80 °C"],
+    },
+    theoryCore: {
+      stem: "Answer the following questions on thermal energy transfers:",
+      parts: [
+        { lbl: "(a)", text: "State why a dull black metal can containing hot water cools faster than an identical shiny silver can.", marks: 1, lines: 1 },
+        { lbl: "(b)", text: "Explain why convection cannot occur in a solid, and state why metals conduct faster than glass.", marks: 2, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "A fixed mass of gas is compressed at constant temperature as shown.",
+      svg: "gasCylinder",
+      parts: [
+        { lbl: "(a)", text: "Calculate the new pressure p₂ when the volume decreases from 450 cm³ to 150 cm³.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Explain in terms of particles why p₂ is greater than p₁ at constant temperature.", marks: 1, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "In an experiment measuring the cooling rate of hot water, state TWO control variables that must stay constant when comparing a beaker with a lid against a beaker without a lid.",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 5,
+    title: "Module 5: General Waves & Sound",
+    cup: "CUP 3rd Ed. Ch. 12, 14",
+    mcqCore: {
+      stem: "What is the approximate range of sound frequencies audible to a healthy human ear?",
+      options: ["2 Hz – 200 Hz", "20 Hz – 20 000 Hz", "200 Hz – 200 000 Hz", "20 000 Hz – 2 000 000 Hz"],
+    },
+    mcqExt: {
+      stem: "A ship sends an ultrasound pulse vertically down to the seabed and detects its echo 1.6 s later. Speed of sound in seawater = 1500 m/s. How deep is the sea?",
+      options: ["600 m", "1200 m", "2400 m", "4800 m"],
+    },
+    theoryCore: {
+      stem: "The displacement–distance graph of a transverse water wave of frequency 4.0 Hz is shown.",
+      svg: "waveGraph",
+      parts: [
+        { lbl: "(a)", text: "State the amplitude and the wavelength of this wave.", marks: 2, lines: 1 },
+        { lbl: "(b)", text: "Calculate the speed of the wave.", marks: 1, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "Answer the following on wave properties and sound:",
+      parts: [
+        { lbl: "(a)", text: "Explain the difference between transverse and longitudinal waves in terms of particle vibrations.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Describe what happens to wave speed, frequency, and wavelength when water waves enter shallower water.", marks: 1, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "Two students stand 170 m from a tall wall and clap wooden blocks together in time with the echo, timing 10 claps in 10.0 s (1.0 s per echo). Calculate the speed of sound [1] and state why timing 10 echoes improves accuracy [1].",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 6,
+    title: "Module 6: Light, Lenses & EM Spectrum",
+    cup: "CUP 3rd Ed. Ch. 13, 15",
+    mcqCore: {
+      stem: "Which order lists electromagnetic waves from LOWEST frequency to HIGHEST frequency?",
+      options: [
+        "Gamma rays → X-rays → Visible light → Radio waves",
+        "Radio waves → Infrared → Visible light → Ultraviolet",
+        "Microwaves → Ultraviolet → Infrared → Gamma rays",
+        "Infrared → Microwaves → Visible light → X-rays"
+      ],
+    },
+    mcqExt: {
+      stem: "Light travels in air at 3.0 × 10⁸ m/s and enters glass of refractive index n = 1.5. What is the speed of light in the glass?",
+      options: ["1.5 × 10⁸ m/s", "2.0 × 10⁸ m/s", "3.0 × 10⁸ m/s", "4.5 × 10⁸ m/s"],
+    },
+    theoryCore: {
+      stem: "Answer the following on lenses and EM waves:",
+      parts: [
+        { lbl: "(a)", text: "State three characteristics of the image formed by a converging lens when an object is placed closer to the lens than the principal focus F (u < f).", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Name the EM wave region used in satellite television broadcasting.", marks: 1, lines: 1 }
+      ],
+    },
+    theoryExt: {
+      stem: "A ray of light enters a glass block (n = 1.50) at an angle of incidence i = 42°.",
+      svg: "refractionBlock",
+      parts: [
+        { lbl: "(a)", text: "Calculate the angle of refraction r inside the glass.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Calculate the critical angle c of this glass.", marks: 1, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "In an optics pin-method experiment using a glass block, why should the optical pins be placed at least 5 cm apart [1] and viewed from their bases rather than their tops [1]?",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 7,
+    title: "Module 7: Magnetism, Static & Electrical Quantities",
+    cup: "CUP 3rd Ed. Ch. 16–18",
+    mcqCore: {
+      stem: "A plastic rod becomes negatively charged when rubbed with a dry cloth. What moved to cause this?",
+      options: [
+        "Protons moved from the cloth to the rod.",
+        "Protons moved from the rod to the cloth.",
+        "Electrons moved from the cloth to the rod.",
+        "Electrons moved from the rod to the cloth."
+      ],
+    },
+    mcqExt: {
+      stem: "A metal wire of resistance 8.0 Ω is stretched uniformly to twice its original length and half its cross-sectional area. What is its new resistance?",
+      options: ["4.0 Ω", "8.0 Ω", "16 Ω", "32 Ω"],
+    },
+    theoryCore: {
+      stem: "Answer the following on magnetism and charge:",
+      parts: [
+        { lbl: "(a)", text: "State why soft iron is used as the core of an electromagnet, whereas steel is used for permanent magnets.", marks: 1, lines: 1 },
+        { lbl: "(b)", text: "A steady current of 0.40 A flows through a lamp for 2.0 minutes. Calculate the total charge that passes through the lamp.", marks: 2, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "The I–V graph compares an ohmic resistor and a filament lamp.",
+      svg: "ivGraph",
+      parts: [
+        { lbl: "(a)", text: "Explain why the gradient of the filament lamp curve decreases as voltage increases.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Calculate the cost of running a 2.2 kW heater for 3.5 hours at $0.20 per kWh.", marks: 1, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "To measure the resistance R = V / I of a wire, explain why the switch should be opened between readings [1] and state the exact column heading required for resistance in a Paper 6 table [1].",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 8,
+    title: "Module 8: Electric Circuits & Safety",
+    cup: "CUP 3rd Ed. Ch. 19",
+    mcqCore: {
+      stem: "Why must a mains fuse and switch always be placed in the LIVE wire?",
+      options: [
+        "To increase total power output",
+        "So the appliance is isolated from high voltage when switched off or when the fuse blows",
+        "Because the neutral wire has zero resistance",
+        "To prevent current flowing in the earth wire"
+      ],
+    },
+    mcqExt: {
+      stem: "Two resistors of 6.0 Ω and 3.0 Ω are connected in parallel. What is their combined resistance?",
+      options: ["0.50 Ω", "2.0 Ω", "4.5 Ω", "9.0 Ω"],
+    },
+    theoryCore: {
+      stem: "An electric kettle rated at 230 V, 2.2 kW has a metal casing.",
+      parts: [
+        { lbl: "(a)", text: "Calculate the normal operating current of the kettle and choose the correct fuse rating (3 A, 5 A, or 13 A).", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "State the purpose of the earth wire connected to the metal casing.", marks: 1, lines: 1 }
+      ],
+    },
+    theoryExt: {
+      stem: "A 12.0 V battery is connected to a 6.0 Ω resistor and a 12 Ω resistor in parallel.",
+      svg: "circuitDiagram",
+      parts: [
+        { lbl: "(a)", text: "Calculate the combined resistance of the two parallel resistors.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Calculate the reading on ammeter A (total current from the battery).", marks: 1, lines: 1 }
+      ],
+    },
+    atp: {
+      stem: "A student draws a circuit to measure the I–V curve of a lamp. State how the voltmeter and ammeter must be connected [1] and what happens if the ammeter is accidentally placed in parallel across the lamp [1].",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 9,
+    title: "Module 9: Electromagnetism & Transformers",
+    cup: "CUP 3rd Ed. Ch. 20–21",
+    mcqCore: {
+      stem: "Which change increases the turning effect on a current-carrying coil in a simple d.c. motor?",
+      options: [
+        "Decreasing the number of turns on the coil",
+        "Increasing the current and using a stronger magnetic field",
+        "Replacing the coil with plastic wire",
+        "Switching off the power supply"
+      ],
+    },
+    mcqExt: {
+      stem: "An ideal transformer steps 240 V a.c. down to 12 V a.c. to power a 36 W lamp. What is the primary current?",
+      options: ["0.15 A", "3.0 A", "6.7 A", "60 A"],
+    },
+    theoryCore: {
+      stem: "The diagram shows an ideal step-down transformer with Nₚ = 2400 turns and Nₛ = 120 turns.",
+      svg: "transformerSvg",
+      parts: [
+        { lbl: "(a)", text: "Calculate the output voltage Vₛ across the secondary coil.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "State two advantages of transmitting electricity across a national grid at high voltage.", marks: 1, lines: 1 }
+      ],
+    },
+    theoryExt: {
+      stem: "Power of 44 kW is transmitted at 22 kV through overhead cables of total resistance 5.0 Ω.",
+      parts: [
+        { lbl: "(a)", text: "Calculate the current flowing in the transmission cables.", marks: 1, lines: 1 },
+        { lbl: "(b)", text: "Calculate the thermal power lost in the cables and explain why high transmission voltage reduces losses.", marks: 2, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "A bar magnet is pushed into a coil connected to a centre-zero ammeter, causing a rightward deflection. Predict two changes to the needle deflection if the magnet is pulled OUT twice as fast with the same pole facing the coil.",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 10,
+    title: "Module 10: Nuclear Atom & Radioactivity",
+    cup: "CUP 3rd Ed. Ch. 22–23",
+    mcqCore: {
+      stem: "Which row correctly matches the most strongly ionising and most penetrating nuclear radiations?",
+      options: [
+        "Most ionising: alpha (α) | Most penetrating: gamma (γ)",
+        "Most ionising: gamma (γ) | Most penetrating: alpha (α)",
+        "Most ionising: alpha (α) | Most penetrating: beta (β)",
+        "Most ionising: beta (β) | Most penetrating: gamma (γ)"
+      ],
+    },
+    mcqExt: {
+      stem: "Carbon-14 (¹⁴₆C) undergoes β⁻ decay to form nitrogen (N). Which equation is balanced?",
+      options: [
+        "¹⁴₆C → ¹⁴₇N + ⁰₋₁β",
+        "¹⁴₆C → ¹⁰₄Be + ⁴₂α",
+        "¹⁴₆C → ¹⁴₅B + ⁰₊₁β",
+        "¹⁴₆C → ¹³₆C + ¹₀n"
+      ],
+    },
+    theoryCore: {
+      stem: "Answer the following on nuclear decay and nuclear energy:",
+      parts: [
+        { lbl: "(a)", text: "Polonium-210 (²¹⁰₈₄Po) emits an α-particle (⁴₂He) to form lead (ᵃ_b Pb). Find the values of a and b.", marks: 2, lines: 1 },
+        { lbl: "(b)", text: "State the difference between nuclear fission and nuclear fusion.", marks: 1, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "The decay curve of a radioactive source (with background count rate 40 counts/min) is shown.",
+      svg: "halfLifeCurve",
+      parts: [
+        { lbl: "(a)", text: "Starting from a total count rate of 460 counts/min and half-life 6.0 hours, calculate the total detector count rate after 18.0 hours.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "State ONE observation from Rutherford's α-scattering experiment and what it proves about the nucleus.", marks: 1, lines: 2 }
+      ],
+    },
+    atp: {
+      stem: "When measuring the half-life of a short-lived source in a lab, explain why a student must measure background radiation multiple times BEFORE bringing the source in [1] and state TWO safety precautions for handling sources [1].",
+      marks: 2,
+      lines: 2,
+    }
+  },
+  {
+    id: 11,
+    title: "Module 11: Space Physics (Solar System & Universe)",
+    cup: "CUP 3rd Ed. Ch. 24–25 (2023–2028 New)",
+    mcqCore: {
+      stem: "Which list orders the four inner rocky planets by INCREASING distance from the Sun?",
+      options: [
+        "Venus, Mercury, Earth, Mars",
+        "Mercury, Earth, Venus, Mars",
+        "Mercury, Venus, Earth, Mars",
+        "Mars, Earth, Venus, Mercury"
+      ],
+    },
+    mcqExt: {
+      stem: "What is Cosmic Microwave Background Radiation (CMBR) evidence for?",
+      options: [
+        "Nuclear fission inside Earth's core",
+        "Thermal radiation from the Big Bang cooled/redshifted into microwaves as the Universe expanded",
+        "Reflected sunlight from Kuiper belt comets",
+        "Magnetic fields around Jupiter"
+      ],
+    },
+    theoryCore: {
+      stem: "Answer the following questions on the Milky Way, astronomical distances and redshift (Syllabus 6.2 Core):",
+      svg: "orbitSvg",
+      parts: [
+        { lbl: "(a)", text: "Define 'one light-year' and name the galaxy that contains our Sun.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "State what is meant by redshift of light from distant galaxies.", marks: 1, lines: 1 }
+      ],
+    },
+    theoryExt: {
+      stem: "Answer the following on stars and cosmology:",
+      parts: [
+        { lbl: "(a)", text: "A galaxy recedes at v = 6.6 × 10⁶ m/s. Given H₀ = 2.2 × 10⁻¹⁸ s⁻¹, calculate its distance d and estimate the age of the Universe.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "List the stages after main sequence for a star much more massive than the Sun.", marks: 1, lines: 1 }
+      ],
+    },
+    atp: {
+      stem: "According to the accretion model, briefly explain how the planets of the Solar System formed around the young Sun and why the inner planets are rocky while outer planets are gas giants.",
+      marks: 2,
+      lines: 3,
+    }
+  },
+  {
+    id: 12,
+    title: "Module 12: Paper 6 Practical Skills, Graphs & Planning",
+    cup: "Paper 6 ATP (All Topics)",
+    mcqCore: {
+      stem: "Which column heading follows Cambridge Paper 6 rules for recording lengths in centimetres?",
+      options: ["Length", "Length (cm) with '12.5 cm' in rows", "l / cm with pure numbers like '12.5' in rows", "cm / l"],
+    },
+    mcqExt: {
+      stem: "When calculating the gradient of a straight best-fit line on a Paper 6 graph, what fraction of the plotted line must the gradient triangle cover?",
+      options: [
+        "Less than one quarter",
+        "Only between two adjacent data points",
+        "More than half (≥ 50%) of the drawn line",
+        "Exactly 1 cm horizontally"
+      ],
+    },
+    theoryCore: {
+      stem: "Look at the diagram showing a student reading water volume in a measuring cylinder.",
+      svg: "atpParallax",
+      parts: [
+        { lbl: "(a)", text: "Record the accurate volume reading shown by the meniscus.", marks: 1, lines: 1 },
+        { lbl: "(b)", text: "State how to avoid parallax error and explain what error occurs if the eye is positioned above the meniscus.", marks: 2, lines: 2 }
+      ],
+    },
+    theoryExt: {
+      stem: "A student repeats a timing measurement 4 times: 10.2 s, 10.45 s, 12.8 s, 10.3 s.",
+      parts: [
+        { lbl: "(a)", text: "Identify the anomalous reading and calculate the accurate mean time.", marks: 2, lines: 2 },
+        { lbl: "(b)", text: "Explain why all readings should be recorded to a consistent number of decimal places.", marks: 1, lines: 1 }
+      ],
+    },
+    atp: {
+      stem: "You are asked to plan an investigation on how insulation thickness (number of cotton wool layers) affects the cooling rate of hot water. State ONE independent, ONE dependent, and TWO control variables.",
+      marks: 2,
+      lines: 3,
+    }
+  }
+];
+const CONSTANTS_DATA = [
+  ["Acceleration of free fall near Earth's surface", "g", "9.8 m/s² (or 9.8 N/kg) — ALWAYS use 9.8, NOT 10"],
+  ["Speed of electromagnetic waves in vacuum", "c", "3.0 × 10⁸ m/s"],
+  ["Hubble constant", "H₀", "2.2 × 10⁻¹⁸ s⁻¹"],
+  ["One light-year", "ly", "9.5 × 10¹⁵ m"],
+  ["Absolute zero / Kelvin conversion", "T / K", "T / K = θ / °C + 273 (0 °C = 273 K)"],
+  ["Specific heat capacity of water (typical)", "c", "4200 J/(kg °C)"]
+];
+const PREFIXES_DATA = [
+  ["Giga", "G", "10⁹", "1 GW = 10⁹ W"],
+  ["Mega", "M", "10⁶", "1 MHz = 10⁶ Hz"],
+  ["kilo", "k", "10³", "1 kΩ = 1000 Ω; 1 kJ = 1000 J"],
+  ["centi", "c", "10⁻²", "100 cm = 1 m (10⁶ cm³ = 1 m³!)"],
+  ["milli", "m", "10⁻³", "1 mA = 0.001 A; 1 ms = 10⁻³ s"],
+  ["micro", "μ", "10⁻⁶", "1 μm = 10⁻⁶ m"],
+  ["nano", "n", "10⁻⁹", "1 nm = 10⁻⁹ m"]
+];
+const SYMBOLS_DATA = [
+  { name: "Cell", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="8" y1="20" x2="34" y2="20" stroke="#0f172a" stroke-width="2"/><line x1="34" y1="6" x2="34" y2="34" stroke="#0f172a" stroke-width="2"/><line x1="44" y1="12" x2="44" y2="28" stroke="#0f172a" stroke-width="3.5"/><line x1="44" y1="20" x2="72" y2="20" stroke="#0f172a" stroke-width="2"/></svg>` },
+  { name: "Fixed resistor", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="20" y2="20" stroke="#0f172a" stroke-width="2"/><rect x="20" y="12" width="40" height="16" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="60" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/></svg>` },
+  { name: "Variable resistor", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="20" y2="20" stroke="#0f172a" stroke-width="2"/><rect x="20" y="12" width="40" height="16" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="60" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/><line x1="22" y1="34" x2="58" y2="6" stroke="#0f172a" stroke-width="1.8"/><polygon points="60,4 52,7 57,12" fill="#0f172a"/></svg>` },
+  { name: "Thermistor (NTC)", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="20" y2="20" stroke="#0f172a" stroke-width="2"/><rect x="20" y="12" width="40" height="16" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="60" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/><polyline points="18,34 26,34 56,6" fill="none" stroke="#0f172a" stroke-width="1.8"/></svg>` },
+  { name: "LDR", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="20" y2="20" stroke="#0f172a" stroke-width="2"/><rect x="20" y="12" width="40" height="16" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="60" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/><circle cx="40" cy="20" r="14" fill="none" stroke="#0f172a" stroke-width="1.4"/><line x1="12" y1="4" x2="22" y2="11" stroke="#0f172a" stroke-width="1.6"/><polygon points="24,12 18,11 21,7" fill="#0f172a"/></svg>` },
+  { name: "Lamp", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="26" y2="20" stroke="#0f172a" stroke-width="2"/><circle cx="40" cy="20" r="14" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="30" y1="10" x2="50" y2="30" stroke="#0f172a" stroke-width="1.8"/><line x1="50" y1="10" x2="30" y2="30" stroke="#0f172a" stroke-width="1.8"/><line x1="54" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/></svg>` },
+  { name: "Fuse", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/><rect x="22" y="13" width="36" height="14" fill="none" stroke="#0f172a" stroke-width="2"/></svg>` },
+  { name: "Diode", svg: `<svg viewBox="0 0 80 40" width="76"><line x1="6" y1="20" x2="74" y2="20" stroke="#0f172a" stroke-width="2"/><polygon points="30,10 30,30 50,20" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="30" stroke="#0f172a" stroke-width="2.2"/></svg>` }
+];
+
+const p = new URLSearchParams(location.search);
+const mods = (p.get("mods") || "1,2,3,4,12").split(",").map(Number).filter(n => n>=1 && n<=12);
+const tier = ["dual","core","ext"].includes(p.get("tier")) ? p.get("tier") : "dual";
+const milestone = p.get("milestone") || "Cambridge IGCSE Physics (0625) Diagnostic";
+const showConst = p.get("const") !== "0";
+const showSym = p.get("sym") !== "0";
+const mins = Math.max(10, parseInt(p.get("time") || String(mods.length * 10), 10) || 50);
+
+document.getElementById("topMilestone").textContent = milestone + " • Auto-saved locally";
+const STORE_KEY = "igcse_0625_custom_st_" + mods.join("_") + "_" + tier;
+let draft = { name:"", school:"", answers:{}, submitted:false };
+let secsLeft = mins * 60;
+
+setInterval(() => {
+  if (!draft.submitted && secsLeft > 0) {
+    secsLeft--;
+    document.getElementById("timerBox").value = String(Math.floor(secsLeft/60)).padStart(2,"0") + ":" + String(secsLeft%60).padStart(2,"0");
+  }
+}, 1000);
+
+function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function loadDraft() {
+  try { const r = localStorage.getItem(STORE_KEY); if (r) draft = JSON.parse(r); } catch {}
+  document.getElementById("stName").value = draft.name || "";
+  document.getElementById("stSchool").value = draft.school || "";
+}
+function saveDraft() {
+  draft.name = document.getElementById("stName").value;
+  draft.school = document.getElementById("stSchool").value;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(draft)); } catch {}
+}
+
+function renderPaper() {
+  const chosen = MODULES.filter(m => mods.includes(m.id));
+  const dis = draft.submitted ? "disabled" : "";
+  const letters = ["A","B","C","D"];
+  let qNo = 1;
+  const mcqs = [];
+  chosen.forEach(m => {
+    if (tier !== "ext") mcqs.push({ mod:m, tier:"Core", item:m.mcqCore });
+    if (tier !== "core") mcqs.push({ mod:m, tier:"Ext", item:m.mcqExt });
+  });
+  let h = `<h2 style="margin:0 0 4px;">${esc(milestone)}</h2>
+    <p style="margin:0 0 12px;color:#475569;font-size:0.9rem;">Take <strong>g = 9.8 N/kg</strong>. Show full working and units.</p>`;
+  h += `<div class="section-banner"><span>SECTION A — Multiple Choice</span><span>${mcqs.length} marks</span></div>`;
+  mcqs.forEach(e => {
+    const k = `mcq_${e.mod.id}_${e.tier}`;
+    const picked = draft.answers[k];
+    h += `<div class="q-card"><div><strong>${qNo}.</strong> ${e.item.stem} <strong>[1]</strong></div>
+      <ul class="mcq-opts">` + e.item.options.map((op, i) => `
+        <li class="${picked===i?'picked':''}" onclick="pickMcq('${k}',${i})">
+          <input type="radio" name="${k}" ${picked===i?'checked':''} ${dis} />
+          <span><strong>${letters[i]}.</strong> ${op}</span>
+        </li>`).join("") + `</ul></div>`;
+    qNo++;
+  });
+
+  const theories = [];
+  chosen.forEach(m => {
+    if (tier !== "ext") theories.push({ mod:m, tier:"Core", item:m.theoryCore });
+    if (tier !== "core") theories.push({ mod:m, tier:"Ext", item:m.theoryExt });
+  });
+  h += `<div class="section-banner"><span>SECTION B — Structured Theory</span><span>${theories.length * 3} marks</span></div>`;
+  theories.forEach(e => {
+    h += `<div class="q-card"><div><strong>Question ${qNo}</strong> [3 marks]</div>
+      <div style="margin-top:6px;">${e.item.stem}</div>
+      ${e.item.svg ? `<div class="svg-wrap">${SVGS[e.item.svg]}</div>` : ""}
+      ` + e.item.parts.map((pt, idx) => {
+        const k = `th_${e.mod.id}_${e.tier}_${idx}`;
+        const val = draft.answers[k] || "";
+        return `<div class="subpart"><div><strong>${pt.lbl}</strong> ${pt.text} <strong>[${pt.marks}]</strong></div>
+          <textarea class="online-ta" ${dis} placeholder="Working &amp; answer..." oninput="setTxt('${k}',this.value)">${esc(val)}</textarea>
+          <div class="print-ans">${esc(val || "(No answer)")}</div></div>`;
+      }).join("") + `</div>`;
+    qNo++;
+  });
+
+  h += `<div class="section-banner"><span>SECTION C — Practical Skills (ATP)</span><span>${chosen.length * 2} marks</span></div>`;
+  chosen.forEach(m => {
+    const k = `atp_${m.id}`;
+    const val = draft.answers[k] || "";
+    h += `<div class="q-card"><div><strong>Question ${qNo}</strong> [2 marks]</div>
+      <div style="margin-top:6px;">${m.atp.stem}</div>
+      <textarea class="online-ta" ${dis} placeholder="Experimental answer..." oninput="setTxt('${k}',this.value)">${esc(val)}</textarea>
+      <div class="print-ans">${esc(val || "(No answer)")}</div></div>`;
+    qNo++;
+  });
+
+  if (showConst) {
+    h += `<div class="appendix-page"><h3>Physical Constants &amp; SI Prefixes</h3>
+      <table class="exam-tbl"><tr><th>Quantity</th><th>Symbol</th><th>Value</th></tr>` +
+      CONSTANTS_DATA.map(r => `<tr><td>${r[0]}</td><td><strong>${r[1]}</strong></td><td>${r[2]}</td></tr>`).join("") + `</table></div>`;
+  }
+  if (showSym) {
+    h += `<div class="appendix-page"><h3>Standard Circuit Symbols</h3>
+      <table class="exam-tbl">` + SYMBOLS_DATA.map(s => `<tr><td>${s.name}</td><td>${s.svg}</td></tr>`).join("") + `</table></div>`;
+  }
+
+  document.getElementById("paperSheet").innerHTML = h;
+  const doneMcq = mcqs.filter(e => draft.answers[`mcq_${e.mod.id}_${e.tier}`] !== undefined).length;
+  document.getElementById("progText").textContent = `MCQ answered: ${doneMcq} / ${mcqs.length}`;
+  if (draft.submitted) showSubUI();
+}
+
+function pickMcq(k, i) { if (draft.submitted) return; draft.answers[k] = i; saveDraft(); renderPaper(); }
+function setTxt(k, v) { if (draft.submitted) return; draft.answers[k] = v; saveDraft(); }
+function payload() { return { pack:"0625-custom-v2", mods, tier, milestone, name:draft.name||"Unnamed", school:draft.school||"", submittedAt:new Date().toISOString(), answers:draft.answers }; }
+function showSubUI() {
+  document.getElementById("btnSubmit").disabled = true;
+  document.getElementById("btnSubmit").textContent = "✓ Đã nộp bài";
+  document.getElementById("stName").disabled = true;
+  document.getElementById("stSchool").disabled = true;
+  document.getElementById("subCodeOut").value = btoa(unescape(encodeURIComponent(JSON.stringify(payload()))));
+  document.getElementById("submitPanel").classList.add("show");
+}
+function submitTest() {
+  if (!document.getElementById("stName").value.trim()) { alert("Vui lòng nhập Họ tên trước khi nộp."); return; }
+  draft.submitted = true; saveDraft(); renderPaper();
+  document.getElementById("submitPanel").scrollIntoView({behavior:"smooth"});
+}
+function downloadSub() {
+  const p = payload();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(p,null,2)], {type:"application/json"}));
+  a.download = `0625_Custom_${(p.name||"student").replace(/\s+/g,"_")}.json`;
+  a.click();
+}
+function copySubCode() {
+  navigator.clipboard?.writeText(document.getElementById("subCodeOut").value).then(() => alert("Đã copy Mã bài nộp!"));
+}
+
+loadDraft();
+renderPaper();
+</script>
+</body>
+</html>

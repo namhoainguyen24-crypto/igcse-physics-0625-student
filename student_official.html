@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cambridge IGCSE Physics (0625) — Candidate Assessment</title>
+  <style>
+    :root { --bg:#f1f5f9; --ink:#0f172a; --muted:#475569; --accent:#1d4ed8; --border:#cbd5e1; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+    .topbar { background:linear-gradient(135deg,#0f172a,#1e3a8a); color:#fff; padding:16px 22px; }
+    .topbar-inner { max-width:980px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; }
+    .topbar h1 { margin:0; font-size:1.2rem; }
+    .topbar p { margin:3px 0 0; font-size:0.84rem; color:#cbd5e1; }
+    .container { max-width:980px; margin:18px auto 70px; padding:0 16px; }
+    .test-tabs { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:8px; margin-bottom:16px; }
+    .tab-btn { background:#fff; border:2px solid var(--border); border-radius:10px; padding:10px 12px; text-align:left; cursor:pointer; }
+    .tab-btn.active { border-color:var(--accent); background:#eff6ff; }
+    .cand-box { background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; }
+    .cand-box label { display:block; font-size:0.78rem; font-weight:700; color:var(--muted); margin-bottom:4px; }
+    .cand-box input { width:100%; padding:8px 10px; border:1px solid #94a3b8; border-radius:6px; font-size:0.9rem; }
+    .sheet { background:#fff; border:1px solid var(--border); border-radius:12px; padding:24px; }
+    .sec-head { margin:24px 0 12px; padding:9px 14px; background:#0f172a; color:#fff; border-radius:8px; font-weight:700; display:flex; justify-content:space-between; }
+    .q-card { border:1px solid #e2e8f0; border-radius:10px; padding:15px 17px; margin-bottom:14px; }
+    .q-stem { white-space:pre-line; margin:6px 0 10px; font-size:0.95rem; }
+    .fig-wrap { margin:10px 0; text-align:center; }
+    .fig-wrap img { max-width:100%; max-height:350px; border:1px solid #e2e8f0; border-radius:6px; padding:4px; background:#fff; }
+    table.cam-tbl { border-collapse:collapse; margin:8px 0 12px; font-size:0.88rem; }
+    table.cam-tbl th, table.cam-tbl td { border:1px solid #94a3b8; padding:5px 12px; text-align:center; }
+    table.cam-tbl th { background:#f1f5f9; }
+    .mcq-opts { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px; }
+    .mcq-opt { display:flex; gap:8px; align-items:flex-start; border:1px solid #cbd5e1; border-radius:8px; padding:8px 10px; cursor:pointer; background:#f8fafc; }
+    .mcq-opt.picked { border-color:var(--accent); background:#eff6ff; }
+    .subpart { margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; }
+    .ans-box { width:100%; min-height:62px; margin-top:6px; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; font-size:0.9rem; }
+    .bar { position:sticky; bottom:10px; margin-top:20px; background:#0f172a; color:#fff; border-radius:12px; padding:14px 18px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; box-shadow:0 8px 24px rgba(15,23,42,0.28); }
+    .btn { border:none; border-radius:8px; padding:9px 14px; font-size:0.86rem; font-weight:600; cursor:pointer; color:#fff; background:#2563eb; }
+    .btn-green { background:#059669; }
+    .btn-slate { background:#475569; }
+    .submit-panel { display:none; margin-top:18px; background:#ecfdf5; border:2px solid #059669; border-radius:12px; padding:18px 20px; }
+    .submit-panel.show { display:block; }
+    .code-area { width:100%; height:76px; font-family:monospace; font-size:0.78rem; padding:8px; border:1px solid #94a3b8; border-radius:6px; margin:8px 0; }
+    .print-ans { display:none; white-space:pre-wrap; border:1px solid #cbd5e1; padding:6px 8px; border-radius:4px; margin-top:6px; font-size:0.88rem; }
+    @media print {
+      .no-print,.topbar,.test-tabs,.bar,.submit-panel { display:none !important; }
+      .ans-box { display:none !important; }
+      .print-ans { display:block !important; }
+      .q-card { break-inside:avoid; }
+      body { background:#fff; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar no-print">
+    <div class="topbar-inner">
+      <div>
+        <h1>Cambridge IGCSE Physics (0625) — Diagnostic Entrance Paper</h1>
+        <p id="topSub">Candidate Assessment Mode • Answers are automatically saved locally on this device</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-slate" onclick="window.print()">🖨️ In / Lưu PDF</button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="test-tabs no-print" id="testTabs"></div>
+    <div class="cand-box">
+      <div><label>Candidate Full Name *</label><input id="candName" type="text" placeholder="Họ và tên học sinh..." oninput="saveDraft()" /></div>
+      <div><label>Current School / Grade</label><input id="candSchool" type="text" placeholder="Trường / Lớp hiện tại..." oninput="saveDraft()" /></div>
+      <div><label>Timer</label><input id="timerBox" type="text" readonly value="60:00" style="font-weight:700;background:#f8fafc;" /></div>
+    </div>
+    <div class="sheet" id="sheet"></div>
+
+    <div class="submit-panel no-print" id="submitPanel">
+      <h3 style="margin:0 0 6px;color:#065f46;">✅ Đã hoàn tất &amp; khóa bài làm!</h3>
+      <p style="margin:0 0 10px;font-size:0.9rem;">Hãy gửi bài cho giáo viên chấm bằng 1 trong 3 cách dưới đây (không làm mất bài khi tải lại trang):</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+        <button class="btn btn-green" onclick="downloadSubmission()">💾 Tải file bài làm (.json)</button>
+        <button class="btn" onclick="copySubmissionCode()">📋 Copy Mã bài nộp gửi Giáo viên</button>
+        <button class="btn btn-slate" onclick="window.print()">🖨️ In / Lưu PDF bài làm</button>
+      </div>
+      <textarea id="subCodeOut" class="code-area" readonly></textarea>
+    </div>
+
+    <div class="bar no-print">
+      <div id="progText" style="font-weight:700;">Answered: 0 / 15 MCQs</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-green" id="btnSubmit" onclick="submitCandidate()">✓ Nộp bài &amp; Tạo Mã gửi Giáo viên</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const TESTS = [{"id": 1, "code": "TEST 1", "timing": "Đầu Year 1 (HK I Year 10 / Pre-IGCSE Entry)", "scope": "Measurements, Density, Speed & Acceleration Graphs, Mass & Weight, Forces, Spring Constant & Work/Efficiency", "duration": "60 phút", "targetTotal": 50, "mcqs": [{"n": 1, "stem": "Water drips from a tap into a measuring cylinder.\n\nThe table shows the volume of water in the cylinder every minute for four minutes.", "table": {"headers": ["time / minutes", "volume of water / cm³"], "rows": [["0", "0"], ["1.0", "27"], ["2.0", "57"], ["3.0", "83"], ["4.0", "112"]]}, "q": "What is the average volume of water collected in the cylinder each minute?", "opts": {"A": "22 cm³", "B": "28 cm³", "C": "56 cm³", "D": "57 cm³"}}, {"n": 2, "stem": "Which single apparatus is used to find the volume of a solid cube and which single apparatus is used to find the volume of a quantity of liquid?", "optTableHeaders": ["", "volume of solid cube", "volume of liquid"], "opts": {"A": "balance | balance", "B": "balance | measuring cylinder", "C": "ruler | balance", "D": "ruler | measuring cylinder"}}, {"n": 3, "stem": "Which equipment is used to find the density of an irregularly shaped stone?", "opts": {"A": "force meter and ruler", "B": "measuring cylinder, ruler and water", "C": "measuring cylinder, top pan balance and water", "D": "top pan balance and ruler"}}, {"n": 4, "stem": "The graph shows how the speed of an object changes with time.", "img": "pp_figs/t1_q02_mcq.png", "q": "How far does the object travel in 10 seconds?", "opts": {"A": "8 m", "B": "10 m", "C": "60 m", "D": "80 m"}}, {"n": 5, "stem": "Which statement about mass or weight is not correct?", "opts": {"A": "Masses can be compared using a balance.", "B": "Mass is a force.", "C": "Weights can be compared using a balance.", "D": "Weight is a force."}}, {"n": 6, "stem": "A pendulum starts swinging and its motion is timed. The time measured for 20 complete swings is 30 s.\n\nWhat is the time for one complete swing of the pendulum?", "opts": {"A": "0.67 s", "B": "0.75 s", "C": "1.5 s", "D": "3.0 s"}}, {"n": 7, "stem": "Which process involves the transfer of energy by mechanical working?", "opts": {"A": "radiating thermal energy from a stationary object", "B": "measuring the room temperature with a digital thermometer", "C": "passing an electric current through a LED", "D": "pushing a box along the floor"}}, {"n": 8, "stem": "Which statement about power is correct?", "opts": {"A": "Power is measured in joules.", "B": "Power = energy × time.", "C": "Power is the rate of energy transfer.", "D": "Greater power always gives higher efficiency."}}, {"n": 9, "stem": "Light from a torch is incident on a plane mirror. The angle of incidence is 38°.\n\nWhat is the angle of reflection?", "opts": {"A": "38°", "B": "52°", "C": "76°", "D": "142°"}}, {"n": 10, "stem": "Which quantity is an example of a force?", "opts": {"A": "density", "B": "mass", "C": "volume", "D": "weight"}}, {"n": 11, "stem": "A helium balloon is taped to a top-pan balance. A metal block of mass 100 g is placed on the balance. The reading on the balance is 91 g.", "q": "Which statement can be deduced from this experiment?", "opts": {"A": "The balloon exerts a downward force of 0.09 N on the top-pan balance.", "B": "The helium has a mass of –9 g.", "C": "The helium has a mass of +9 g.", "D": "The resultant downward force on the top-pan balance is 0.89 N."}}, {"n": 12, "stem": "The diagram shows the speed–time graph for a car.", "img": "pp_figs/t1_q12_mcq.png", "q": "What is the acceleration of the car?", "opts": {"A": "4.0 m / s²", "B": "6.0 m / s²", "C": "16 m / s²", "D": "24 m / s²"}}, {"n": 13, "stem": "The diagram shows a velocity–time graph for an object which is accelerating.", "img": "pp_figs/t1_q13_mcq.png", "q": "What is the acceleration of the object?", "opts": {"A": "0.40 m / s²", "B": "2.5 m / s²", "C": "3.0 m / s²", "D": "100 m / s²"}}, {"n": 14, "stem": "A 0.15 kg mass is suspended from a vertical spring.\nThe mass is pulled downwards until the spring has extended by 12 cm from its unstretched length.\nThe spring constant of the spring is 30 N / m.\n\nWhat is the magnitude of the initial acceleration of the mass when it is released?", "opts": {"A": "14 m / s²", "B": "24 m / s²", "C": "28 m / s²", "D": "34 m / s²"}}, {"n": 15, "stem": "An electrician uses a lifting machine. The lifting machine takes 4.5 s to lift the electrician a vertical height of 3.2 m.\nThe mass of the electrician is 72 kg.\nThe energy for the lifting machine is supplied by a 2.0 kW electric motor.\n\nWhat is the efficiency of the lifting machine?", "opts": {"A": "0.026", "B": "0.25", "C": "0.50", "D": "0.75"}}], "secB": [{"qnum": 16, "marks": 7, "intro": "A student measures the diameter of some identical steel balls. Fig. 1.1 shows the arrangement she uses.", "imgs": ["pp_figs/t1_q16_fig1_1.png"], "parts": [{"label": "(a)(i)", "text": "Using the ruler in Fig. 1.1, determine the distance AB on Fig. 1.1.", "marks": 2, "unit": "cm"}, {"label": "(a)(ii)", "text": "Use the distance AB to determine the diameter of one steel ball.", "marks": 2, "unit": "cm"}, {"label": "(b)", "text": "The mass of some steel balls is 54 g and the total volume of these steel balls is 6.9 cm³.\nCalculate the density of the steel.", "marks": 3, "unit": "g / cm³"}]}, {"qnum": 17, "marks": 9, "intro": "A student is measuring the time period for a pendulum. Figure 2.1 shows the equipment.", "imgs": ["pp_figs/t1_q17_fig2_1.png"], "parts": [{"label": "(a)", "img": "pp_figs/t1_q17_fig2_2.png", "text": "The student pulls the pendulum bob to the side, as shown in Figure 2.2. The student then releases the pendulum bob.\nDescribe how the student uses the equipment to determine the time period for the pendulum bob.", "marks": 4}, {"label": "(b)", "img": "pp_figs/t1_q17_fig2_3.png", "text": "Figure 2.3 shows the horizontal forces on the pendulum bob after the student releases it.\nCalculate the resultant horizontal force on the load (and state its direction).", "marks": 2}, {"label": "(c)", "img": "pp_figs/t1_q17_fig2_4.png", "text": "Figure 2.4 shows the reading on the stopwatch after one measurement.\nDetermine the time shown on the stopwatch in seconds.", "marks": 1, "unit": "s"}, {"label": "(d)(i)", "text": "Complete the sentence: Mass is a measure of the ............................................................ in an object.", "marks": 1}, {"label": "(d)(ii)", "text": "Complete the sentence: Weight is the ............................................................ on an object that has mass.", "marks": 1}]}, {"qnum": 18, "marks": 9, "intro": "Figure 2.1 shows a ship made of steel floating on the sea.", "imgs": ["pp_figs/t1_q18_fig2_1.png"], "parts": [{"label": "(a)(i)", "text": "State the equation that links density, mass and volume.", "marks": 1}, {"label": "(a)(ii)", "text": "The density of steel is 7900 kg / m³. The mass of a solid steel cube is 110 kg.\nCalculate the volume of the steel cube.", "marks": 1, "unit": "m³"}, {"label": "(a)(iii)", "text": "The density of sea water is 1030 kg / m³.\nState why the solid steel cube sinks when placed in sea water.", "marks": 1}, {"label": "(a)(iv)", "text": "Explain why the steel ship in Figure 2.1 floats on the sea water.", "marks": 2}, {"label": "(b)(i)", "text": "The mass of the ship is 3.5 × 10⁷ kg. The ship accelerates at 0.75 m / s².\nCalculate the force which causes this acceleration.", "marks": 2, "unit": "N"}, {"label": "(b)(ii)", "text": "Explain why the force provided by the ship’s engine must be larger than the value in (b)(i).", "marks": 2}]}], "secC": [{"qnum": 19, "marks": 10, "intro": "A student determines the density of a glass ball.\n(a) The student:\n• pours water into a measuring cylinder until it is approximately half full\n• places the measuring cylinder of water on a top-pan balance\n• records the combined mass m₁ of the measuring cylinder and water: m₁ = 125.6 g", "imgs": [], "parts": [{"label": "(a)(i)", "text": "Describe one technique for using a top-pan balance to measure the mass of the measuring cylinder and water to ensure an accurate reading.", "marks": 1}, {"label": "(a)(ii)", "img": "pp_figs/t1_q19_fig1_1.png", "text": "Figure 1.1 shows the water level in the measuring cylinder.\nRecord the volume V₁ of water in the measuring cylinder.", "marks": 1, "unit": "cm³"}, {"label": "(a)(iii)", "text": "Describe two techniques that the student uses when measuring the volume of the water to ensure an accurate reading.", "marks": 2}, {"label": "(b)(i)", "text": "(b) The student places four glass balls into the water in the measuring cylinder, ensuring no water splashes out. The student records m₂ = 132.8 g.\nCalculate the mass m of one glass ball.", "marks": 1, "unit": "g"}, {"label": "(b)(ii)", "text": "The student records the volume V₂ = 94 cm³ of the water and four glass balls.\nCalculate the volume V of one glass ball.", "marks": 1, "unit": "cm³"}, {"label": "(b)(iii)", "text": "Calculate the density ρ of a glass ball. Use your values from (b)(i) and (b)(ii) and give the unit. Use the equation ρ = m / V.", "marks": 2}, {"label": "(c)", "text": "Suggest two improvements that will help a student to determine a more accurate value for the volume of a glass ball.", "marks": 2}]}]}, {"id": 2, "code": "TEST 2", "timing": "Giữa Year 1 (HK II Year 10 — Topics 1 & 2)", "scope": "Ch. 1–11: Forces, Turning Effects, Momentum & Impulse, Pressure (Fluid & Boyle's Law), Kinetic Particle Model & Thermal Energy", "duration": "60 phút", "targetTotal": 50, "mcqs": [{"n": 1, "stem": "A wooden bar is pivoted at its centre so that it can rotate freely. Two equal forces F are applied to the bar.\nIn which diagram is the turning effect greatest?", "img": "pp_figs/t2_q02_mcq.png", "opts": {"A": "Diagram A", "B": "Diagram B", "C": "Diagram C", "D": "Diagram D"}}, {"n": 2, "stem": "The lower its ......1...... of gravity, the greater the ......2...... of an object.\n\nWhich words complete gaps 1 and 2?", "optTableHeaders": ["", "1", "2"], "opts": {"A": "centre | stability", "B": "force | stability", "C": "centre | weight", "D": "force | weight"}}, {"n": 3, "stem": "In which position does a person exert least pressure on the ground?", "opts": {"A": "kneeling on the ground", "B": "lying flat on the ground", "C": "sitting on the ground", "D": "standing on the ground"}}, {"n": 4, "stem": "Gases can be compressed, but liquids cannot be compressed.\n\nWhich statement explains this difference?", "opts": {"A": "Each particle in a gas is more compressible than each particle in a liquid.", "B": "Particles in a gas are further apart than particles in a liquid.", "C": "Particles in a gas attract each other more strongly than particles in a liquid.", "D": "Particles in a gas move more slowly than particles in a liquid."}}, {"n": 5, "stem": "Which name is given to the change of state when steam at 100 °C changes to water at 100 °C?", "opts": {"A": "boiling", "B": "condensation", "C": "evaporation", "D": "melting"}}, {"n": 6, "stem": "A substance melts at –40 °C.\n\nWhat is its melting point in kelvin?", "opts": {"A": "–313 K", "B": "–233 K", "C": "40 K", "D": "233 K"}}, {"n": 7, "stem": "Four students describe the phrase ‘absolute zero’ during a lesson on the particle model.\n\nWhich student is correct?", "opts": {"A": "This is the lowest possible temperature.", "B": "Particles in a solid start vibrating.", "C": "Particles do not have any weight.", "D": "Particles have the least gravitational potential energy."}}, {"n": 8, "stem": "A student writes sentences about evaporation, but there are two words missing.\n\nDuring evaporation, the ......1...... energetic particles escape from the surface of a liquid.\n\nEvaporation causes the temperature of the remaining liquid to ......2...... .\n\nWhich words complete gaps 1 and 2?", "optTableHeaders": ["", "1", "2"], "opts": {"A": "least | decrease", "B": "least | increase", "C": "most | decrease", "D": "most | increase"}}, {"n": 9, "stem": "Some electric hotplates are metal and do not glow when hot.\nOther hotplates are glass and have a heater underneath that glows red. The heater makes the glass hot.\nWith both hotplates, there is no air gap between the hotplate and a metal pan placed on the hotplate.\n\nWhich statement is correct?", "opts": {"A": "The glass hotplate transfers less energy by radiation to the base of the pan than the metal hotplate.", "B": "The glass hotplate transfers energy by convection to the base of the pan.", "C": "The metal hotplate transfers energy by conduction to the base of the pan.", "D": "The metal hotplate transfers energy by convection to the base of the pan."}}, {"n": 10, "stem": "There is a vacuum between the double walls of a vacuum flask.\n\nWhich types of thermal transfer are reduced by the vacuum?", "opts": {"A": "conduction, convection and radiation", "B": "conduction and convection only", "C": "conduction and radiation only", "D": "convection and radiation only"}}, {"n": 11, "stem": "Which graph shows the relationship between pressure p and volume V for a fixed mass of gas at constant temperature?", "img": "pp_figs/t2_q12_mcq.png", "opts": {"A": "Graph A (p vs V linear)", "B": "Graph B (p vs V negative slope)", "C": "Graph C (p vs 1/V straight line through origin)", "D": "Graph D (p vs 1/V curve)"}}, {"n": 12, "stem": "A cricket ball of mass 0.15 kg is moving at a speed of 30 m / s.\nThe ball hits a stationary bat and bounces back at the same speed in the opposite direction.\nThe ball is in contact with the bat for 1.0 × 10⁻³ s.\n\nWhich row gives the change in momentum of the ball and the magnitude of the force applied to the ball?", "optTableHeaders": ["", "change of momentum / (kg m/s)", "force applied to ball / N"], "opts": {"A": "4.5 | 4500", "B": "4.5 | 9000", "C": "9.0 | 4500", "D": "9.0 | 9000"}}, {"n": 13, "stem": "Which expression can be used to determine the impulse on a tennis ball?", "opts": {"A": "force × time", "B": "momentum / time", "C": "mass × initial velocity", "D": "mass × acceleration"}}, {"n": 14, "stem": "Some altimeters use the change in air pressure to measure height.\n\nIf the pressure is 100 kPa at sea level on a particular day, what will the pressure be at the top of an 830 m hill?\n(Take the density of air to be constant at 1.3 kg / m³.)", "opts": {"A": "1.1 kPa", "B": "11 kPa", "C": "89 kPa", "D": "110 kPa"}}, {"n": 15, "stem": "A stationary smoke particle is hit by a fast-moving nitrogen molecule.\n\nWhich row describes the motion of the smoke particle and of the nitrogen molecule after the collision?", "optTableHeaders": ["", "smoke particle", "nitrogen molecule"], "opts": {"A": "moves | rebounds", "B": "moves | stops", "C": "remains stationary | rebounds", "D": "remains stationary | stops"}}], "secB": [{"qnum": 16, "marks": 8, "intro": "Fig. 2.1 shows the speed–time graph for a cyclist.", "imgs": ["pp_figs/t2_q16_fig2_1.png"], "parts": [{"label": "(a)(i)", "text": "In Fig. 2.1, the sections ST, TW, WX, XY and YZ indicate stages of the cyclist’s journey.\nState one section which shows the cyclist moving with constant speed.", "marks": 1}, {"label": "(a)(ii)", "text": "State one section which shows the cyclist moving with constant deceleration.", "marks": 1}, {"label": "(a)(iii)", "text": "State one section which shows the cyclist moving with constant non-zero acceleration.", "marks": 1}, {"label": "(b)", "text": "Calculate the distance travelled by the cyclist in section ST.", "marks": 3, "unit": "m"}, {"label": "(c)(i)", "img": "pp_figs/t2_q16_fig2_2.png", "text": "Fig. 2.2 shows the horizontal forces on a cyclist (160 N backwards, 220 N forwards).\nCalculate the size of the resultant force on the cyclist.", "marks": 1, "unit": "N"}, {"label": "(c)(ii)", "text": "State the effect, if any, of the resultant force on the motion of the cyclist.", "marks": 1}]}, {"qnum": 17, "marks": 7, "intro": "Figure 3.1 shows a polar bear and a person standing on thick ice. The figures are drawn to a scale of 1 cm : 100 cm.\nTable 3.1 contains information about the polar bear and the person.", "imgs": ["pp_figs/t2_q17_fig3_1.png"], "table": {"caption": "Table 3.1", "headers": ["", "polar bear", "person"], "rows": [["mass / kg", "590", "84"], ["area in contact with ice / m²", "1.12", "0.020"]]}, "parts": [{"label": "(a)(i)", "text": "Calculate the weight of the polar bear.", "marks": 1, "unit": "N"}, {"label": "(a)(ii)", "text": "Calculate the pressure that the polar bear exerts on the ice.", "marks": 2, "unit": "Pa"}, {"label": "(a)(iii)", "text": "Use the numbers (0.125, 7.0, 8.0, 56, 392) to complete each equation:\nmass of polar bear = .......... × mass of person\narea of polar bear in contact with ice = .......... × area of person in contact with ice\npressure exerted by person = .......... × pressure exerted by polar bear", "marks": 2}, {"label": "(b)", "text": "Under the ice is sea water with a density of 1030 kg / m³.\nCalculate the change in pressure Δp between the top of the sea water and a depth of 2.50 m.", "marks": 2, "unit": "Pa"}]}, {"qnum": 18, "marks": 5, "intro": "Fig. 2.1 shows a golfer about to hit a golf ball with a golf club. The initial momentum of the golf ball is zero.", "imgs": ["pp_figs/t2_q18_fig2_1.png"], "parts": [{"label": "(a)", "text": "Define momentum.", "marks": 1}, {"label": "(b)(i)", "text": "The golf club is in contact with the ball for 5.0 × 10⁻⁴ s. The velocity of the golf ball as it leaves the golf club is 41 m / s. The golf ball has a mass of 0.046 kg.\nCalculate the impulse on the golf ball.", "marks": 2}, {"label": "(b)(ii)", "text": "Calculate the force applied to the ball by the golf club.", "marks": 2, "unit": "N"}]}, {"qnum": 19, "marks": 5, "intro": "Atmospheric pressure is 1.0 × 10⁵ Pa. A volume of 1.02 m³ of air at atmospheric pressure is pumped into a car tyre.", "imgs": [], "parts": [{"label": "(a)", "text": "The pressure of the air when it is inside the tyre is 2.6 × 10⁵ Pa.\nCalculate the volume of the air when it is in the car tyre.", "marks": 3, "unit": "m³"}, {"label": "(b)(ii)", "text": "The air inside the tyre is a gas.\nExplain, in terms of particles, why the internal energy of the gas decreases when the gas is at a lower temperature.", "marks": 2}]}], "secC": [{"qnum": 20, "marks": 10, "intro": "A student investigates the cooling of water. Fig. 2.1 shows the set-up.", "imgs": ["pp_figs/t2_q20_fig2_1.png"], "parts": [{"label": "(a)", "img": "pp_figs/t2_q20_fig2_2.png", "text": "The thermometer in Fig. 2.2 shows the room temperature θ_R at the beginning of the experiment. Record θ_R.", "marks": 1, "unit": "°C"}, {"label": "(b)(i)", "text": "The student pours 200 cm³ of hot water into a beaker, places a lid on the beaker and records temperature θ in Table 2.1 at t = 0 and at 30 s intervals until he has seven sets of readings.\nComplete the column headings in Table 2.1.", "marks": 1, "table": {"caption": "Table 2.1", "headers": ["t / ......", "θ / ......"], "rows": [["", "92"], ["", "87"], ["", "83"], ["", "80"], ["", "78"], ["", "76"], ["", "75"]]}}, {"label": "(b)(ii)", "text": "Write the times in the first column of Table 2.1.", "marks": 1}, {"label": "(c)(i)", "text": "Calculate the decrease in temperature Δθ between t = 0 and t = 180 s.", "marks": 1, "unit": "°C"}, {"label": "(c)(ii)", "text": "Calculate the average rate of cooling R of the water using the equation R = Δθ / Δt, where Δt = 180 s. Include the unit.", "marks": 2}, {"label": "(d)", "text": "A student states that the water cools slowly. Suggest two changes to the experiment that the student makes to increase the rate of cooling of the hot water without changing the starting temperature of the hot water. Room temperature remains constant.", "marks": 2}, {"label": "(e)", "text": "State one precaution that you would take to obtain accurate temperature readings. Explain briefly the reason for this precaution.", "marks": 2}]}]}, {"id": 3, "code": "TEST 3", "timing": "Cuối Y1 / Đầu Y2 (HK I Year 11 — Topics 3 & 4.1–4.4)", "scope": "Ch. 12–19: Waves, Diffraction, Sound & Echo, Refraction (n = sin i / sin r), EM Spectrum, Electrostatics, Circuits & Electrical Safety", "duration": "60 phút", "targetTotal": 50, "mcqs": [{"n": 1, "stem": "Twelve crests of a water wave pass a boat anchored at sea in a time of 180 s.\nThe distance between consecutive crests of the wave is 10 m.\n\nWhat is the speed of the wave?", "opts": {"A": "0.056 m / s", "B": "0.67 m / s", "C": "15 m / s", "D": "18 m / s"}}, {"n": 2, "stem": "Sound waves may cause an echo.\n\nWhat happens to sound waves to cause an echo and what is the nature of sound waves?", "optTableHeaders": ["", "what an echo is caused by", "nature of sound waves"], "opts": {"A": "reflection | longitudinal", "B": "reflection | transverse", "C": "refraction | longitudinal", "D": "refraction | transverse"}}, {"n": 3, "stem": "A light ray travelling in air hits the surface of a transparent medium.\n\nThe speed of light in air is greater than the speed of light in the medium.\n\nWhat happens to the ray?", "opts": {"A": "The ray is refracted with an angle of refraction that is greater than the angle of incidence.", "B": "The ray is totally internally reflected.", "C": "The ray refracts away from the normal.", "D": "The ray refracts towards the normal."}}, {"n": 4, "stem": "White light enters a glass prism and emerges separated into the seven colours of the visible spectrum.\n\nWhich term describes this effect?", "opts": {"A": "dispersion", "B": "reflection", "C": "total internal reflection", "D": "transmission"}}, {"n": 5, "stem": "Which type of radiation does a remote controller use to send its instructions to a television (TV)?", "opts": {"A": "gamma rays", "B": "infrared radiation", "C": "ultraviolet radiation", "D": "X-rays"}}, {"n": 6, "stem": "A glass rod is rubbed with a silk cloth. The glass rod becomes positively charged.\n\nWhich statement explains how this happens?", "opts": {"A": "Negative charges move from the glass rod to the silk cloth.", "B": "Negative charges move from the silk cloth to the glass rod.", "C": "Positive charges move from the glass rod to the silk cloth.", "D": "Positive charges move from the silk cloth to the glass rod."}}, {"n": 7, "stem": "Which statement about electric current in a conductor is correct?", "opts": {"A": "In a d.c. circuit, the electric current gradually decreases along the conductor.", "B": "In a d.c. circuit, the free electrons flow back and forth.", "C": "In an a.c. circuit, the electric current remains exactly the same all the time.", "D": "In an a.c. circuit, the flow of charge changes direction continually."}}, {"n": 8, "stem": "Which two electrical quantities have the same unit?", "opts": {"A": "current and charge", "B": "electromotive force (e.m.f.) and potential difference (p.d.)", "C": "potential difference (p.d.) and current", "D": "resistance and electromotive force (e.m.f.)"}}, {"n": 9, "stem": "A resistor with a potential difference (p.d.) of 100 V across it carries a current of 5.0 mA.\n\nWhat is the resistance of the resistor?", "opts": {"A": "0.50 Ω", "B": "20 Ω", "C": "500 Ω", "D": "20 000 Ω"}}, {"n": 10, "stem": "A boy shouts and hears the echo from a tall building 2.2 s later.\n\nThe speed of sound in air is 330 m / s.\n\nHow far away from the boy is the building?", "opts": {"A": "150 m", "B": "300 m", "C": "360 m", "D": "730 m"}}, {"n": 11, "stem": "A ray of light, travelling in air, is incident on an air–glass boundary.\nThe angles between the incident ray, the refracted ray and the boundary are shown.", "img": "pp_figs/t3_q11_mcq.png", "q": "Which equation is used to calculate the refractive index n of the glass?", "opts": {"A": "n = sin 40° / sin 26°", "B": "n = sin 40° / sin 64°", "C": "n = sin 50° / sin 26°", "D": "n = sin 50° / sin 64°"}}, {"n": 12, "stem": "Which wave will diffract the most when passing through a gap that is 0.85 m wide?", "optTableHeaders": ["", "wave speed / (m/s)", "wave frequency / Hz"], "opts": {"A": "300 | 280", "B": "300 | 400", "C": "350 | 280", "D": "350 | 400"}}, {"n": 13, "stem": "A cell is connected to a parallel combination of a 2.0 Ω resistor and a 4.0 Ω resistor. The current in the 4.0 Ω resistor is 1.0 A.", "img": "pp_figs/t3_q13_mcq.png", "q": "What is the current in the cell?", "opts": {"A": "1.0 A", "B": "1.5 A", "C": "2.0 A", "D": "3.0 A"}}, {"n": 14, "stem": "A metallic wire X has a resistance.\nWhat is the difference in resistance for a wire of the same material as X that is:\n• shorter than X but the same diameter\n• the same length as X but with a smaller diameter?", "optTableHeaders": ["", "resistance of shorter wire", "resistance of wire with smaller diameter"], "opts": {"A": "greater | greater", "B": "greater | smaller", "C": "smaller | greater", "D": "smaller | smaller"}}, {"n": 15, "stem": "Which diagram shows the current–voltage (I–V) graph for a filament lamp?", "img": "pp_figs/t3_q15_mcq.png", "opts": {"A": "Graph A (curve flattening as V increases)", "B": "Graph B (straight line through origin)", "C": "Graph C (upward-curving I against V)", "D": "Graph D (horizontal line)"}}], "secB": [{"qnum": 16, "marks": 8, "intro": "An observer stands at P and looks into a rock quarry. A small explosion takes place at X in the quarry. Fig. 5.1 shows the situation.", "imgs": ["pp_figs/t3_q16_fig5_1.png"], "parts": [{"label": "(a)(i)", "text": "The observer first hears the sound from the explosion 1.8 s after the explosion occurs. The speed of the sound is 340 m / s.\nCalculate the distance XP from the explosion at X to the observer at P.", "marks": 3, "unit": "m"}, {"label": "(a)(ii)", "text": "The observer then hears a quieter sound from the explosion.\nSuggest how the quieter sound waves reach the observer.", "marks": 2}, {"label": "(b)", "text": "Before the explosion, a warning siren produces a sound. The wavelength of the sound is 0.28 m. The speed of the sound is 340 m / s.\nCalculate the frequency of the sound.", "marks": 3, "unit": "Hz"}]}, {"qnum": 17, "marks": 7, "intro": "Fig. 7.1 shows a container of oil. A ray of light shines on the surface of the oil. The refractive index of the oil is 1.47.", "imgs": ["pp_figs/t3_q17_fig7_1.png"], "parts": [{"label": "(a)", "text": "Describe precisely (or draw on printed paper) the normal on Fig. 7.1 at the point where the ray enters the oil.", "marks": 1}, {"label": "(b)", "text": "The angle x (between the incident ray and the oil surface) is 56°.\nCalculate the value of the angle of refraction.", "marks": 3, "unit": "°"}, {"label": "(c)", "text": "State the approximate speed of light in air.", "marks": 1}, {"label": "(d)", "text": "Calculate the speed of light in the oil. Give your answer to three significant figures.", "marks": 2}]}, {"qnum": 18, "marks": 7, "intro": "A washing machine has an electric motor and an electric heater. Fig. 7.1 shows a simplified circuit diagram for the washing machine.\nThe heater has a resistance of 25 Ω and the power supply has an electromotive force (e.m.f.) of 230 V.", "imgs": ["pp_figs/t3_q18_fig7_1.png"], "parts": [{"label": "(a)", "text": "State the meaning of electromotive force.", "marks": 2}, {"label": "(b)", "text": "State the potential difference (p.d.) across the heater.", "marks": 1, "unit": "V"}, {"label": "(c)", "text": "Calculate the current in the heater.", "marks": 2, "unit": "A"}, {"label": "(d)", "text": "The current in the motor is 1.6 A.\nDetermine the reading on the ammeter in Fig. 7.1. Explain your answer.", "marks": 2}]}, {"qnum": 19, "marks": 3, "intro": "Figure 9.1 shows a laptop with a cable that connects its charger to the mains electricity supply.", "imgs": ["pp_figs/t3_q19_fig9_1.png"], "parts": [{"label": "(a)(i)", "text": "State the hazard due to any damaged insulation on the cable connected to the mains electricity supply.", "marks": 1}, {"label": "(a)(ii)", "text": "State and explain in which wire in the mains electricity supply the switch is connected.", "marks": 2}]}], "secC": [{"qnum": 20, "marks": 10, "intro": "A student measures the resistance of a light-emitting diode (LED) when the current in it changes. The student sets up the circuit shown in Fig. 2.1.", "imgs": ["pp_figs/t3_q20_fig2_1.png"], "table": {"caption": "Table 2.1", "headers": ["resistance between P and Q / Ω", "V_PQ / V", "V_QR / V", "I / A", "R_LED / Ω"], "rows": [["220", "", "2.1", "", ""], ["330", "", "2.0", "0.0076", "263"]]}, "parts": [{"label": "(a)(i)", "text": "The student connects a voltmeter to measure the p.d. across the 220 Ω resistor, closes the switch, records V_PQ, and opens the switch.\nExplain (or draw on printed sheet) how to connect the voltmeter on Fig. 2.1.", "marks": 2}, {"label": "(a)(ii)", "img": "pp_figs/t3_q20_fig2_2.png", "text": "The voltmeter reading is shown in Fig. 2.2.\nWrite down the reading in the top row of Table 2.1 under the heading V_PQ.", "marks": 1, "unit": "V"}, {"label": "(b)", "text": "The student reconnects the voltmeter across the LED (Q and R) and records V_QR = 2.1 V.\nCalculate the current I in the circuit in part (a) using I = V_PQ / R, where R = 220 Ω.", "marks": 1, "unit": "A"}, {"label": "(c)", "text": "Calculate the resistance R_LED of the LED using R_LED = V_QR / I.\nRecord your answer to a suitable number of significant figures for this experiment.", "marks": 2, "unit": "Ω"}, {"label": "(d)", "text": "The student replaces the 220 Ω resistor with a 330 Ω resistor and repeats (a)–(c) (Table 2.1 shows I = 0.0076 A).\nCalculate the value of V_PQ across the 330 Ω resistor.", "marks": 1, "unit": "V"}, {"label": "(e)", "text": "Use your results in Table 2.1 to write a conclusion, stating how the change in current affects the p.d. V_QR across the LED and the resistance R_LED of the LED.", "marks": 2}, {"label": "(f)(ii)", "text": "Another student uses a variable resistor in series to control the current in the circuit instead of swapping fixed 220 Ω and 330 Ω resistors (as in parts (a) and (d)).\nExplain one advantage of using a variable resistor for this purpose.", "marks": 1}]}]}, {"id": 4, "code": "TEST 4", "timing": "Giữa Year 2 (HK II Year 11 — Pre-Mock Full Syllabus, trọng tâm Topics 4.5, 5 & 6)", "scope": "Ch. 20–25 + Full Review: Electromagnetism, Split-Ring Motor, Transformers & Transmission, α/β/γ & Nuclear Reactions, Stellar Life Cycle & Hubble's Law", "duration": "60 phút", "targetTotal": 50, "mcqs": [{"n": 1, "stem": "The metal cases of electrical appliances are connected to an earth wire.\n\nWhich statement is not correct?", "opts": {"A": "The live wire may become loose and touch the metal case.", "B": "If the metal case becomes live, the earth wire conducts current to the ground.", "C": "The earth wire needs to have a high resistance.", "D": "Earthing metal cases helps prevent a person from receiving an electric shock."}}, {"n": 2, "stem": "A current-carrying coil in a magnetic field experiences a turning effect.\nStudents are asked how the turning effect can be increased.\nThree suggestions are listed:\n1  decreasing the number of turns on the coil\n2  increasing the current\n3  increasing the strength of the magnetic field\n\nWhich suggestions will increase the turning effect?", "opts": {"A": "1, 2 and 3", "B": "1 and 2 only", "C": "1 and 3 only", "D": "2 and 3 only"}}, {"n": 3, "stem": "The transformer in a laptop power supply is used to change mains voltage from 240 V to 20 V.\nThe transformer has 600 turns on the secondary coil.\n\nWhich type of transformer is it and how many turns does the transformer have on the primary coil?", "optTableHeaders": ["", "transformer type", "number of turns on primary coil"], "opts": {"A": "step-down | 50", "B": "step-down | 7200", "C": "step-up | 50", "D": "step-up | 7200"}}, {"n": 4, "stem": "A student suggests three sources of naturally occurring background radiation:\n1  cosmic rays\n2  medical X-rays\n3  radioactive emissions from radon gas from the ground\n\nWhich suggestions are correct?", "opts": {"A": "1 and 3", "B": "1 only", "C": "2 and 3", "D": "2 only"}}, {"n": 5, "stem": "Which statement about radioactive decay by α, β and γ emission is correct?", "opts": {"A": "The only type of radioactive decay that changes a nucleus of one element to that of another element is α-decay.", "B": "The only types of radioactive decay that change a nucleus of one element to that of another element are α-decay and β-decay.", "C": "The only types of radioactive decay that change a nucleus of one element to that of another element are α-decay and γ-emission.", "D": "The only types of radioactive decay that change a nucleus of one element to that of another element are β-decay and γ-emission."}}, {"n": 6, "stem": "A radioactive isotope has a half-life of 120 minutes.\nIt emits radiation at a rate of 100 particles per second.\n\nHow long does it take for the rate of emission to fall to 25 particles per second?", "opts": {"A": "30 minutes", "B": "45 minutes", "C": "90 minutes", "D": "240 minutes"}}, {"n": 7, "stem": "In school laboratories, radioactive sources are stored in lead-lined boxes.\n\nWhy is lead used?", "opts": {"A": "Lead neutralises radiation.", "B": "Lead absorbs radiation.", "C": "Lead repels radiation.", "D": "Lead dissolves radiation."}}, {"n": 8, "stem": "Which statement about the Sun is not correct?", "opts": {"A": "The Sun is one of the biggest stars.", "B": "The Sun emits ultraviolet radiation.", "C": "The Sun emits infrared radiation.", "D": "Helium is present in the Sun."}}, {"n": 9, "stem": "The Sun, the Earth and the Moon are all bodies in the Solar System.\nThe Earth has a periodic cycle of day and night and a periodic cycle of seasons.\n\nWhich row relates the periods of these cycles to the motions of these bodies?", "optTableHeaders": ["", "period of day and night", "period of the seasons"], "opts": {"A": "the Earth orbits the Sun | the Earth rotates about its axis", "B": "the Earth orbits the Sun | the Moon orbits the Earth", "C": "the Earth rotates about its axis | the Earth orbits the Sun", "D": "the Earth rotates about its axis | the Moon orbits the Earth"}}, {"n": 10, "stem": "An astronomer observes redshift in the light from a distant galaxy.\n\nWhich statement about redshift is correct?", "opts": {"A": "It is the decrease in the observed wavelength of red light emitted from receding galaxies.", "B": "It is evidence that the Universe is contracting and supports the Big Bang Theory.", "C": "It is evidence that the Universe is expanding and supports the Big Bang Theory.", "D": "Redshift is when light from receding galaxies appears blue."}}, {"n": 11, "stem": "What is the purpose of the brushes and the split-ring commutator in a d.c. motor?", "opts": {"A": "to change the size of the current", "B": "to keep the coil turning in the same direction", "C": "to keep the speed of rotation constant", "D": "to make the output an alternating voltage"}}, {"n": 12, "stem": "The diagram shows β-particles being directed between the poles of a magnet.", "img": "pp_figs/t4_q13_mcq.png", "q": "In which direction will the particles be deflected?", "opts": {"A": "into the page", "B": "out of the page", "C": "towards the bottom of the page", "D": "towards the top of the page"}}, {"n": 13, "stem": "Which quantity is an estimate of the age of the Universe?", "opts": {"A": "H₀", "B": "d × H₀", "C": "1 / H₀", "D": "v × H₀"}}, {"n": 14, "stem": "Uranium-235 can undergo nuclear fission in many ways.\n\nWhich equation correctly shows a possible fission reaction for uranium-235?", "opts": {"A": "¹₀n + ²³⁵₉₂U → ¹⁴¹₅₆Ba + ⁹²₃₆Kr + 3 ¹₀n", "B": "¹₀n + ²³⁵₉₂U → ⁹¹₃₈Sr + ¹⁴⁴₅₄Xe + 2 ¹₀n", "C": "¹₀n + ²³⁵₉₂U → ⁹⁵₃₇Rb + ¹³⁶₅₅Cs + 3 ¹₀n", "D": "¹₀n + ²³⁵₉₂U → ⁸⁷₃₅Br + ¹⁴⁶₅₇La + 4 ¹₀n"}}, {"n": 15, "stem": "A galaxy is moving away from the Earth at a velocity of 3000 km / s.\n\nWhat is the distance between the Earth and the galaxy?", "opts": {"A": "7.3 × 10⁻²⁵ m", "B": "7.3 × 10⁻²² m", "C": "1.4 × 10²¹ m", "D": "1.4 × 10²⁴ m"}}], "secB": [{"qnum": 16, "marks": 8, "intro": "A transformer steps down high-voltage electricity. The transformer has 6200 turns on the primary coil and 43 turns on the secondary coil. The output voltage is 230 V.", "imgs": [], "parts": [{"label": "(a)(i)", "text": "Calculate the input voltage in the step-down transformer.", "marks": 2, "unit": "V"}, {"label": "(a)(ii)", "text": "A 2.2 kW kettle is connected to the secondary coil of the transformer.\nCalculate the current in the primary coil of the step-down transformer. Assume the transformer is 100% efficient.", "marks": 3, "unit": "A"}, {"label": "(b)(i)", "text": "A power station produces 1.3 GW of electricity. A transformer at the power station steps up the voltage before the electricity is transmitted. This reduces the power loss during transmission.\nState the equation for power loss in electricity transmission.", "marks": 1}, {"label": "(b)(ii)", "text": "Explain how the step-up transformer reduces power losses during electricity transmission.", "marks": 2}]}, {"qnum": 17, "marks": 8, "intro": "Figure 9.1 shows a beam of α-particles and γ-radiation entering an electric field between two charged metal plates P (+) and Q (–).", "imgs": ["pp_figs/t4_q17_fig9_1.png"], "parts": [{"label": "(a)", "text": "On Figure 9.1 (or describe in detail for printed answer sheet), explain/draw the path inside the electric field of:\n1. the α-particles (labelled α)\n2. the γ-radiation (labelled γ).", "marks": 3}, {"label": "(b)", "text": "A student places a sheet of paper in the path of the beam before it reaches the electric field.\nState how this affects the path of the α-particles and γ-radiation inside the electric field.", "marks": 2}, {"label": "(c)", "text": "The beam of α-particles and γ-radiation in Figure 9.1 is replaced by a beam of β-particles.\nState and explain the path of the β-particles in the electric field. Use ideas about electrostatic force in your answer.", "marks": 3}]}, {"qnum": 18, "marks": 9, "intro": "Space Physics: Orbital speed, seasons, stellar evolution, and Hubble's Law.", "imgs": [], "parts": [{"label": "(a)", "text": "State the equation that defines the average orbital speed v of a planet. State the meaning of any symbols you use.", "marks": 2}, {"label": "(b)", "text": "Suggest why countries that are a significant distance from the Equator experience significant temperature variation throughout the year.", "marks": 1}, {"label": "(c)", "text": "Fill in the gaps in the paragraph about a star much more massive than the Sun:\n\"The stage that follows the stable state in the life cycle of the star is the ....................................... stage.\nIt then explodes as a supernova to form a ....................................... , this leaves behind a ....................................... or a ....................................... .\"", "marks": 4}, {"label": "(d)", "text": "A galaxy is moving away from the Earth with a speed of 33 000 km / s. The value of the Hubble constant is 2.2 × 10⁻¹⁸ per second.\nCalculate the distance from the galaxy to the Earth. Give your answer in light-years.", "marks": 2, "unit": "light-years"}]}], "secC": [{"qnum": 19, "marks": 3, "intro": "A student performs an electrical resistance experiment using Circuit 1 (Figure 3.1, containing a battery, switch, ammeter, voltmeter and resistor) with a digital ammeter.", "imgs": ["pp_figs/t4_q19_fig3_1.png"], "parts": [{"label": "(b)(ii)", "img": "pp_figs/t4_q19_fig3_6.png", "text": "Figure 3.6 shows a digital ammeter display when it is connected in a circuit.\nRecord the value for the current shown in amperes.", "marks": 1, "unit": "A"}, {"label": "(c)", "text": "Suggest two reasons why the switch in Circuit 1 is opened after readings are taken.", "marks": 2}]}, {"qnum": 20, "marks": 7, "intro": "A student investigates the change in current in a conducting liquid as the distance between two electrodes is changed. The circuit is shown in Fig. 4.1.", "imgs": ["pp_figs/t4_q20_fig4_1.png"], "parts": [{"label": "Plan (7m)", "text": "Plan an experiment to investigate the change in current in the liquid as the distance between the electrodes is changed.\nYou should:\n• explain briefly how to do the investigation\n• state the key variables to keep constant\n• draw a table, or tables, with column headings, to show how to display your readings (you are not required to enter any readings in the table)\n• explain how to use your readings to reach a conclusion.", "marks": 7}]}]}];
+    const qs = new URLSearchParams(location.search);
+    const fixedTest = qs.get('test');
+    let currentId = Math.min(4, Math.max(1, parseInt(fixedTest || '1', 10) || 1));
+    if (fixedTest) document.getElementById('testTabs').style.display = 'none';
+
+    let draft = { name:'', school:'', mcq:{}, text:{}, submitted:false };
+    let secsLeft = 3600;
+    setInterval(() => {
+      if (!draft.submitted && secsLeft > 0) {
+        secsLeft--;
+        const m = String(Math.floor(secsLeft/60)).padStart(2,'0');
+        const s = String(secsLeft%60).padStart(2,'0');
+        document.getElementById('timerBox').value = `${m}:${s}`;
+      }
+    }, 1000);
+
+    function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function storageKey() { return 'igcse_0625_official_student_t' + currentId; }
+
+    function loadDraft() {
+      try {
+        const raw = localStorage.getItem(storageKey());
+        draft = raw ? JSON.parse(raw) : { name:'', school:'', mcq:{}, text:{}, submitted:false };
+      } catch { draft = { name:'', school:'', mcq:{}, text:{}, submitted:false }; }
+      document.getElementById('candName').value = draft.name || '';
+      document.getElementById('candSchool').value = draft.school || '';
+    }
+
+    function saveDraft() {
+      draft.name = document.getElementById('candName').value;
+      draft.school = document.getElementById('candSchool').value;
+      try { localStorage.setItem(storageKey(), JSON.stringify(draft)); } catch {}
+    }
+
+    function renderTabs() {
+      document.getElementById('testTabs').innerHTML = TESTS.map(t => `
+        <button class="tab-btn ${t.id===currentId?'active':''}" onclick="switchTest(${t.id})">
+          <strong>${t.code}</strong><div style="font-size:0.78rem;color:#475569;">${esc(t.timing)}</div>
+        </button>
+      `).join('');
+    }
+
+    function switchTest(id) {
+      if (fixedTest) return;
+      currentId = id;
+      loadDraft();
+      renderTabs();
+      renderPaper();
+    }
+
+    function renderTable(tb) {
+      let h = tb.caption ? `<div style="font-weight:700;font-size:0.86rem;margin:6px 0 3px;">${esc(tb.caption)}</div>` : '';
+      h += `<table class="cam-tbl"><thead><tr>${tb.headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>`;
+      tb.rows.forEach(r => { h += `<tr>${r.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`; });
+      return h + '</tbody></table>';
+    }
+
+    function renderPaper() {
+      const t = TESTS.find(x => x.id === currentId);
+      const dis = draft.submitted ? 'disabled' : '';
+      let h = `<h2 style="margin:0 0 4px;">${t.code} — Cambridge IGCSE Physics (0625)</h2>
+        <p style="margin:0 0 12px;color:#475569;font-size:0.9rem;">${esc(t.timing)} • Total: 50 marks • Time: ${esc(t.duration)}</p>`;
+
+      h += `<div class="sec-head"><span>SECTION A — Multiple Choice</span><span>15 marks</span></div>`;
+      t.mcqs.forEach(m => {
+        const picked = draft.mcq[m.n];
+        let opts = '';
+        if (m.optTableHeaders) {
+          opts = `<table class="cam-tbl"><thead><tr>${m.optTableHeaders.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>` +
+            ['A','B','C','D'].map(L => `<tr><td><label style="cursor:pointer;font-weight:700;"><input type="radio" name="mcq_${m.n}" ${picked===L?'checked':''} ${dis} onchange="pickMcq(${m.n},'${L}')" /> ${L}</label></td>` +
+            m.opts[L].split(' | ').map(c=>`<td>${esc(c)}</td>`).join('') + `</tr>`).join('') + `</tbody></table>`;
+        } else {
+          opts = `<div class="mcq-opts">` + ['A','B','C','D'].map(L => `
+            <label class="mcq-opt ${picked===L?'picked':''}">
+              <input type="radio" name="mcq_${m.n}" ${picked===L?'checked':''} ${dis} onchange="pickMcq(${m.n},'${L}')" />
+              <span><strong>${L}.</strong> ${esc(m.opts[L])}</span>
+            </label>`).join('') + `</div>`;
+        }
+        h += `<div class="q-card">
+          <div><strong>Question ${m.n}</strong> [1]</div>
+          <div class="q-stem">${esc(m.stem)}</div>
+          ${m.table ? renderTable(m.table) : ''}
+          ${m.img ? `<div class="fig-wrap"><img src="${m.img}" alt="Q${m.n} figure" /></div>` : ''}
+          ${m.q ? `<div class="q-stem" style="font-weight:600;">${esc(m.q)}</div>` : ''}
+          ${opts}
+        </div>`;
+      });
+
+      [['SECTION B — Structured Theory', '25 marks', t.secB], ['SECTION C — Alternative to Practical', '10 marks', t.secC]].forEach(([title, mk, list]) => {
+        h += `<div class="sec-head"><span>${title}</span><span>${mk}</span></div>`;
+        list.forEach(q => {
+          h += `<div class="q-card">
+            <div><strong>Question ${q.qnum}</strong> [${q.marks} marks]</div>
+            <div class="q-stem">${esc(q.intro)}</div>
+            ${(q.imgs||[]).map(im=>`<div class="fig-wrap"><img src="${im}" alt="Figure" /></div>`).join('')}
+            ${q.table ? renderTable(q.table) : ''}
+          `;
+          q.parts.forEach((pt, idx) => {
+            const pk = `q${q.qnum}_${idx}`;
+            const val = draft.text[pk] || '';
+            h += `<div class="subpart">
+              <div><strong>${esc(pt.label)}</strong> [${pt.marks}]</div>
+              <div class="q-stem">${esc(pt.text)}</div>
+              ${pt.img ? `<div class="fig-wrap"><img src="${pt.img}" alt="Figure" /></div>` : ''}
+              ${pt.table ? renderTable(pt.table) : ''}
+              <textarea class="ans-box" ${dis} placeholder="Enter your working and answer${pt.unit?' ('+pt.unit+')':''}..." oninput="setTxt('${pk}', this.value)">${esc(val)}</textarea>
+              <div class="print-ans">${esc(val || '(No answer)')}</div>
+            </div>`;
+          });
+          h += `</div>`;
+        });
+      });
+      document.getElementById('sheet').innerHTML = h;
+      updateProg();
+      if (draft.submitted) showSubmittedUI();
+    }
+
+    function pickMcq(n, L) {
+      if (draft.submitted) return;
+      draft.mcq[n] = L;
+      saveDraft();
+      renderPaper();
+    }
+    function setTxt(k, v) {
+      if (draft.submitted) return;
+      draft.text[k] = v;
+      saveDraft();
+    }
+    function updateProg() {
+      const done = Object.keys(draft.mcq).length;
+      document.getElementById('progText').textContent = `MCQ answered: ${done} / 15`;
+    }
+
+    function buildPayload() {
+      return {
+        pack: '0625-official-v2',
+        testId: currentId,
+        name: draft.name || 'Unnamed Candidate',
+        school: draft.school || '',
+        submittedAt: new Date().toISOString(),
+        mcq: draft.mcq,
+        text: draft.text
+      };
+    }
+    function encodePayload(obj) {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+    }
+
+    function showSubmittedUI() {
+      document.getElementById('btnSubmit').disabled = true;
+      document.getElementById('btnSubmit').textContent = '✓ Đã nộp bài';
+      document.getElementById('candName').disabled = true;
+      document.getElementById('candSchool').disabled = true;
+      document.getElementById('subCodeOut').value = encodePayload(buildPayload());
+      document.getElementById('submitPanel').classList.add('show');
+    }
+
+    function submitCandidate() {
+      if (!document.getElementById('candName').value.trim()) {
+        alert('Vui lòng nhập Họ và tên học sinh trước khi nộp bài.');
+        document.getElementById('candName').focus();
+        return;
+      }
+      draft.submitted = true;
+      saveDraft();
+      renderPaper();
+      document.getElementById('submitPanel').scrollIntoView({behavior:'smooth'});
+    }
+
+    function downloadSubmission() {
+      const p = buildPayload();
+      const blob = new Blob([JSON.stringify(p, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `0625_Test${currentId}_${(p.name||'student').replace(/\s+/g,'_')}.json`;
+      a.click();
+    }
+
+    function copySubmissionCode() {
+      const code = document.getElementById('subCodeOut').value;
+      navigator.clipboard?.writeText(code).then(() => alert('Đã copy Mã bài nộp! Hãy dán gửi giáo viên.'));
+    }
+
+    loadDraft();
+    renderTabs();
+    renderPaper();
+  </script>
+</body>
+</html>
